@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIÈRE · 显化圣所</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+SC:wght@300;400&display=swap');
+  :root{--cream:#faf6f0;--dark:#1a1510;--gold:#c9a96e;--gold-light:#e2c99a;--red:#8b4a5a;--green:#3d6b3a;--green-pale:#e8f2e4;--pink:#e8b4c0;--blue:#8ab4c8;--lilac:#b0a0c8;--text:#2c2218;--muted:#8a7560;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--cream);color:var(--text);font-family:'Noto Serif SC',serif;min-height:100vh;overflow-x:hidden;}
+  nav{position:fixed;top:0;width:100%;z-index:200;background:rgba(250,246,240,0.93);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,169,110,0.25);display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:60px;}
+  .nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:0.22em;color:var(--gold);}
+  .nav-tabs{display:flex;}
+  .nav-tab{padding:0 22px;height:60px;display:flex;align-items:center;font-size:12px;letter-spacing:0.14em;color:var(--muted);cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;font-family:'Noto Serif SC',serif;transition:all .3s;}
+  .nav-tab:hover{color:var(--gold);}
+  .nav-tab.active{color:var(--dark);border-bottom-color:var(--gold);}
+  .page{display:none;min-height:100vh;padding-top:60px;position:relative;}
+  .page.active{display:block;}
+
+  /* ── GARDEN BACKGROUND ── */
+  #gardenBg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+  /* ── PAGE 1 ── */
+  .hero{position:relative;z-index:1;text-align:center;padding:70px 40px 50px;}
+  .hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;letter-spacing:0.32em;color:var(--gold);margin-bottom:14px;}
+  .hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,68px);font-weight:300;letter-spacing:0.08em;line-height:1.1;color:var(--dark);margin-bottom:10px;}
+  .hero-title em{font-style:italic;color:var(--gold);}
+  .hero-line{width:70px;height:1px;background:var(--gold);margin:20px auto;opacity:.55;}
+  .hero-desc{font-size:13px;letter-spacing:0.1em;color:var(--muted);line-height:2.1;}
+
+  .section{position:relative;z-index:1;padding:30px 40px 20px;max-width:1080px;margin:0 auto;}
+  .section-lbl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;letter-spacing:0.28em;color:var(--gold);text-align:center;margin-bottom:28px;}
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:40px;}
+  .cat-btn{padding:13px 10px;border:1px solid rgba(201,169,110,0.38);background:rgba(250,246,240,0.72);backdrop-filter:blur(6px);cursor:pointer;text-align:center;transition:all .3s;font-family:'Noto Serif SC',serif;font-size:12px;letter-spacing:0.08em;color:var(--text);}
+  .cat-btn:hover,.cat-btn.active{background:var(--gold);color:white;border-color:var(--gold);}
+  .cat-icon{font-size:18px;display:block;margin-bottom:5px;}
+  .card-stage{display:flex;justify-content:center;margin-bottom:40px;}
+  .aff-card{width:100%;max-width:500px;background:rgba(255,253,250,0.9);backdrop-filter:blur(14px);border:1px solid rgba(201,169,110,0.45);padding:44px 38px;text-align:center;position:relative;box-shadow:0 8px 40px rgba(139,74,90,0.07);}
+  .aff-card::before,.aff-card::after{content:'';position:absolute;width:18px;height:18px;border-color:var(--gold);border-style:solid;opacity:.45;}
+  .aff-card::before{top:11px;left:11px;border-width:1px 0 0 1px;}
+  .aff-card::after{bottom:11px;right:11px;border-width:0 1px 1px 0;}
+  .card-cat{font-size:11px;letter-spacing:.28em;color:var(--gold);margin-bottom:18px;text-transform:uppercase;}
+  .card-txt{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.8vw,24px);font-style:italic;line-height:1.75;color:var(--dark);margin-bottom:22px;transition:opacity .4s;}
+  .card-acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .btn{padding:9px 22px;font-size:11px;letter-spacing:.2em;cursor:pointer;font-family:'Noto Serif SC',serif;transition:all .3s;}
+  .btn-o{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+  .btn-o:hover{background:var(--gold);color:white;}
+  .btn-s{background:var(--dark);border:1px solid var(--dark);color:var(--cream);}
+  .btn-s:hover{background:var(--red);border-color:var(--red);}
+
+  /* ── PAGE 2: GOD ── */
+  #page-god{background:var(--green-pale);}
+  .god-wrap{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:55px 22px 80px;}
+  .god-hd{text-align:center;margin-bottom:42px;}
+  .god-title{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,50px);font-weight:300;font-style:italic;color:var(--green);letter-spacing:.07em;margin-bottom:10px;}
+  .god-sub{font-size:12px;letter-spacing:.2em;color:#6a8a6a;}
+  .presets{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px;justify-content:center;}
+  .pq{padding:7px 14px;font-size:11px;letter-spacing:.06em;cursor:pointer;border:1px solid rgba(61,107,58,.28);background:rgba(232,242,228,.8);color:var(--green);transition:all .3s;font-family:'Noto Serif SC',serif;}
+  .pq:hover{background:var(--green);color:white;border-color:var(--green);}
+  .chatbox{background:rgba(255,255,255,.58);backdrop-filter:blur(8px);border:1px solid rgba(61,107,58,.18);min-height:260px;max-height:400px;overflow-y:auto;padding:22px;margin-bottom:14px;}
+  .chat-empty{text-align:center;padding:55px 20px;}
+  .chat-empty-ic{font-size:32px;margin-bottom:10px;opacity:.35;}
+  .chat-empty-tx{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:#7a9a7a;}
+  .msg{margin-bottom:18px;}
+  .msg.user{text-align:right;}
+  .bubble{display:inline-block;max-width:84%;padding:12px 16px;font-size:13px;line-height:1.85;letter-spacing:.04em;}
+  .msg.user .bubble{background:var(--green);color:white;}
+  .msg.god .bubble{background:rgba(255,253,248,.92);border:1px solid rgba(61,107,58,.18);color:var(--text);text-align:left;font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;}
+  .msg.god .src{font-size:10px;letter-spacing:.14em;color:#7a9a7a;margin-top:5px;font-style:normal;font-family:'Noto Serif SC',serif;}
+  .typing-dots span{display:inline-block;width:5px;height:5px;background:#7a9a7a;border-radius:50%;margin:0 2px;animation:bop 1.2s infinite;}
+  .typing-dots span:nth-child(2){animation-delay:.2s;}
+  .typing-dots span:nth-child(3){animation-delay:.4s;}
+  @keyframes bop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+  .input-row{display:flex;gap:7px;}
+  .cinput{flex:1;padding:12px 16px;font-size:13px;letter-spacing:.05em;border:1px solid rgba(61,107,58,.28);background:rgba(255,255,255,.7);color:var(--text);outline:none;font-family:'Noto Serif SC',serif;}
+  .cinput:focus{border-color:var(--green);background:white;}
+  .csend{padding:12px 22px;background:var(--green);color:white;border:none;cursor:pointer;font-size:12px;letter-spacing:.12em;font-family:'Noto Serif SC',serif;}
+  .csend:hover{background:#2a4a28;}
+  .disc{font-size:10px;color:#8aaa8a;text-align:center;margin-top:8px;letter-spacing:.07em;}
+  .chatbox::-webkit-scrollbar{width:3px;}
+  .chatbox::-webkit-scrollbar-thumb{background:rgba(61,107,58,.25);}
+
+  /* ── PAGE 3 ── */
+  #page-ritual{background:var(--cream);}
+  .ritual-wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:55px 22px;}
+  .ritual-hd{text-align:center;margin-bottom:44px;}
+  .ritual-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,44px);font-weight:300;font-style:italic;color:var(--dark);letter-spacing:.07em;margin-bottom:10px;}
+  .steps{display:grid;gap:20px;}
+  .step{display:flex;gap:22px;padding:26px;background:rgba(255,252,248,.82);backdrop-filter:blur(4px);border:1px solid rgba(201,169,110,.28);align-items:flex-start;}
+  .step-n{font-family:'Cormorant Garamond',serif;font-size:44px;font-style:italic;color:var(--gold-light);line-height:1;flex-shrink:0;width:46px;}
+  .step h3{font-size:14px;letter-spacing:.12em;color:var(--dark);margin-bottom:7px;}
+  .step p{font-size:13px;line-height:1.95;color:var(--muted);}
+
+  /* ── JOURNEY PAGE ── */
+  #page-journey{background:linear-gradient(160deg,#f8f2e8 0%,#f0ebe0 100%);}
+  .journey-wrap{position:relative;z-index:1;max-width:660px;margin:0 auto;padding:60px 24px 100px;}
+  .j-phase{animation:jfadein .6s ease;}
+  @keyframes jfadein{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  .j-eyebrow{font-size:11px;letter-spacing:.28em;color:var(--gold);text-align:center;margin-bottom:14px;}
+  .j-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,5vw,54px);font-weight:300;letter-spacing:.07em;line-height:1.15;color:var(--dark);text-align:center;margin-bottom:6px;}
+  .j-title em{font-style:italic;color:var(--gold);}
+  .j-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-weight:300;font-style:italic;color:var(--dark);text-align:center;margin-bottom:10px;}
+  .j-intro{font-size:14px;line-height:2;letter-spacing:.07em;color:var(--muted);text-align:center;margin-bottom:32px;}
+  .j-hint{font-size:13px;line-height:1.9;letter-spacing:.07em;color:var(--muted);text-align:center;margin-bottom:22px;}
+  .j-textarea{width:100%;padding:16px 18px;font-size:14px;line-height:1.85;letter-spacing:.05em;border:1px solid rgba(201,169,110,.35);background:rgba(255,253,248,.85);color:var(--text);outline:none;resize:none;font-family:'Noto Serif SC',serif;margin-bottom:14px;}
+  .j-textarea:focus{border-color:var(--gold);background:white;}
+  .j-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;justify-content:center;}
+  .j-tag{padding:6px 14px;font-size:11px;letter-spacing:.08em;border:1px solid rgba(201,169,110,.35);background:rgba(250,246,240,.7);color:var(--muted);cursor:pointer;transition:all .25s;}
+  .j-tag:hover{background:rgba(201,169,110,.15);color:var(--dark);border-color:var(--gold);}
+  .j-btn-main{display:block;margin:0 auto;padding:13px 36px;background:var(--dark);color:var(--cream);border:none;cursor:pointer;font-size:12px;letter-spacing:.2em;font-family:'Noto Serif SC',serif;transition:background .3s;}
+  .j-btn-main:hover{background:var(--red);}
+  .j-btn-outline{display:block;margin:0 auto;padding:12px 32px;background:transparent;color:var(--gold);border:1px solid var(--gold);cursor:pointer;font-size:12px;letter-spacing:.18em;font-family:'Noto Serif SC',serif;transition:all .3s;}
+  .j-btn-outline:hover{background:var(--gold);color:white;}
+  .j-step-indicator{display:flex;gap:10px;justify-content:center;margin-bottom:28px;}
+  .j-dot{width:8px;height:8px;border-radius:50%;background:rgba(201,169,110,.25);transition:all .4s;}
+  .j-dot.active{background:var(--gold);transform:scale(1.3);}
+  .j-dot.done{background:var(--gold);opacity:.5;}
+  .j-loading{text-align:center;padding:40px 0;}
+  .j-question-card{background:rgba(255,253,248,.9);border:1px solid rgba(201,169,110,.4);padding:22px 26px;margin-bottom:16px;font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;line-height:1.7;color:var(--dark);text-align:center;}
+  .j-q-nav{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+  .j-q-counter{font-size:11px;letter-spacing:.14em;color:var(--muted);}
+  .j-scene-reveal{background:rgba(255,253,248,.88);border:1px solid rgba(201,169,110,.35);padding:32px 28px;margin-bottom:28px;font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;line-height:2;color:var(--dark);white-space:pre-wrap;}
+  .j-scene-reveal::before{content:'✧';display:block;text-align:center;color:var(--gold);font-size:20px;margin-bottom:18px;font-style:normal;}
+  .j-scene-actions{text-align:center;}
+  .j-aff-card{background:rgba(255,253,248,.92);border:1px solid rgba(201,169,110,.45);padding:28px 26px;margin-bottom:14px;position:relative;text-align:center;}
+  .j-aff-card::before,.j-aff-card::after{content:'';position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid;opacity:.4;}
+  .j-aff-card::before{top:9px;left:9px;border-width:1px 0 0 1px;}
+  .j-aff-card::after{bottom:9px;right:9px;border-width:0 1px 1px 0;}
+  .j-aff-num{font-size:10px;letter-spacing:.24em;color:var(--gold);margin-bottom:10px;}
+  .j-aff-text{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;line-height:1.75;color:var(--dark);}
+  .j-final-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px;}
+
+  @media(max-width:600px){nav{padding:0 16px;}.nav-tab{padding:0 10px;font-size:10px;}.section{padding:24px 16px;}.aff-card{padding:32px 20px;}.journey-wrap{padding:50px 16px 80px;}}
+</style>
+</head>
+<body>
+
+<!-- GARDEN CANVAS BACKGROUND -->
+<canvas id="gardenBg"></canvas>
+
+<nav>
+  <div class="nav-logo">LUMIÈRE</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="go('daily',0)">每日显化</button>
+    <button class="nav-tab" onclick="go('god',1)">✦ 与神对话</button>
+    <button class="nav-tab" onclick="go('journey',2)">✧ 显化旅程</button>
+    <button class="nav-tab" onclick="go('ritual',3)">显化仪式</button>
+  </div>
+</nav>
+
+<!-- PAGE 1 -->
+<div id="page-daily" class="page active">
+  <div class="hero">
+    <div class="hero-sub">MANIFESTATION · SANCTUARY</div>
+    <h1 class="hero-title">你的意念<br><em>创造现实</em></h1>
+    <div class="hero-line"></div>
+    <p class="hero-desc">每一句肯定语，都是种下宇宙的种子<br>选择你的意图，开始今天的显化之旅</p>
+  </div>
+  <div class="section">
+    <div class="section-lbl">— 选择你的意图领域 —</div>
+    <div class="cat-grid" id="catGrid"></div>
+    <div class="card-stage">
+      <div class="aff-card">
+        <div class="card-cat" id="cardCat">🌹 爱与关系</div>
+        <div class="card-txt" id="cardTxt">爱如光，自我而生，向外流淌，宇宙中所有美好的爱正向我涌来。</div>
+        <div class="card-acts">
+          <button class="btn btn-o" onclick="nextCard()">换一张 ↻</button>
+          <button class="btn btn-s" onclick="saveCard(this)">收藏 ✦</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page-god" class="page">
+  <div class="god-wrap">
+    <div class="god-hd">
+      <div class="god-title">与神对话</div>
+      <div class="god-sub">— 灵感来源《与神对话》尼尔·唐纳德·沃尔什 —</div>
+    </div>
+    <div class="presets" id="presetQ"></div>
+    <div class="chatbox" id="chatBox">
+      <div class="chat-empty">
+        <div class="chat-empty-ic">✦</div>
+        <div class="chat-empty-tx">提出你内心最深处的问题<br>神在聆听</div>
+      </div>
+    </div>
+    <div class="input-row">
+      <input class="cinput" id="chatInput" placeholder="你有什么想问的？..." onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="csend" onclick="sendMsg()">提问 ✦</button>
+    </div>
+    <div class="disc">✦ 以灵性视角回应，非宗教建议 · 由 Claude AI 驱动</div>
+  </div>
+</div>
+
+<!-- PAGE 3: 显化旅程 -->
+<div id="page-journey" class="page">
+  <canvas id="journeyCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+  <div class="journey-wrap">
+
+    <!-- PHASE 0: 入口 -->
+    <div id="j-entry" class="j-phase">
+      <div class="j-eyebrow">✧ MANIFESTATION JOURNEY</div>
+      <h2 class="j-title">你的显化旅程<br><em>从此刻开始</em></h2>
+      <div class="hero-line" style="margin:20px auto;"></div>
+      <p class="j-intro">我们将用7分钟，带你进入未来的自己。<br>在那里，你已经拥有了一切你渴望的。<br><br>闭上眼睛深呼吸三次，准备好了吗？</p>
+      <button class="j-btn-main" onclick="startJourney()">开始旅程 ✧</button>
+    </div>
+
+    <!-- PHASE 1: 采集意图 -->
+    <div id="j-phase1" class="j-phase" style="display:none">
+      <div class="j-step-indicator"><span class="j-dot active"></span><span class="j-dot"></span><span class="j-dot"></span><span class="j-dot"></span></div>
+      <div class="j-eyebrow">第一步 · 播下种子</div>
+      <h3 class="j-heading">你最渴望显化的是什么？</h3>
+      <p class="j-hint">不需要完美，只需要真实。写下你心里那个最深的渴望。</p>
+      <textarea class="j-textarea" id="j-desire" placeholder="例如：我想要一段深深爱我的关系 / 我想要财务自由，不再为钱担忧 / 我想要健康有活力的身体…" rows="4"></textarea>
+      <div class="j-tags">
+        <span class="j-tag" onclick="fillDesire(this)">深爱我的伴侣</span>
+        <span class="j-tag" onclick="fillDesire(this)">财务自由与丰盛</span>
+        <span class="j-tag" onclick="fillDesire(this)">理想的事业与使命</span>
+        <span class="j-tag" onclick="fillDesire(this)">健康有活力的身体</span>
+        <span class="j-tag" onclick="fillDesire(this)">内心的平静与自信</span>
+      </div>
+      <button class="j-btn-main" onclick="goPhase2()">继续 →</button>
+    </div>
+
+    <!-- PHASE 2: 深化问答 (AI驱动3个引导问题) -->
+    <div id="j-phase2" class="j-phase" style="display:none">
+      <div class="j-step-indicator"><span class="j-dot done"></span><span class="j-dot active"></span><span class="j-dot"></span><span class="j-dot"></span></div>
+      <div class="j-eyebrow">第二步 · 具象化</div>
+      <h3 class="j-heading" id="j-q-title">宇宙正在聆听…</h3>
+      <p class="j-hint" id="j-q-sub"></p>
+      <div id="j-q-loading" class="j-loading">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+      </div>
+      <div id="j-q-content" style="display:none">
+        <div class="j-question-card" id="j-question-box"></div>
+        <textarea class="j-textarea" id="j-answer" placeholder="用心感受，写下你的答案…" rows="3"></textarea>
+        <div class="j-q-nav">
+          <span class="j-q-counter" id="j-q-counter">问题 1 / 3</span>
+          <button class="j-btn-main" onclick="nextQuestion()">继续 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3: 生成沉浸场景 -->
+    <div id="j-phase3" class="j-phase" style="display:none">
+      <div class="j-step-indicator"><span class="j-dot done"></span><span class="j-dot done"></span><span class="j-dot active"></span><span class="j-dot"></span></div>
+      <div class="j-eyebrow">第三步 · 进入未来</div>
+      <h3 class="j-heading">你的未来场景正在展开…</h3>
+      <p class="j-hint">闭上眼睛，感受这个画面</p>
+      <div id="j-scene-loading" class="j-loading">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+        <p style="margin-top:14px;font-size:12px;letter-spacing:.1em;color:var(--muted)">宇宙正在为你编织这个场景…</p>
+      </div>
+      <div id="j-scene-content" style="display:none">
+        <div class="j-scene-reveal" id="j-scene-box"></div>
+        <div class="j-scene-actions">
+          <button class="j-btn-outline" onclick="goPhase4()">我感受到了，继续 ✧</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4: 锚定 + 肯定语卡片 -->
+    <div id="j-phase4" class="j-phase" style="display:none">
+      <div class="j-step-indicator"><span class="j-dot done"></span><span class="j-dot done"></span><span class="j-dot done"></span><span class="j-dot active"></span></div>
+      <div class="j-eyebrow">第四步 · 锚定频率</div>
+      <h3 class="j-heading">你的专属显化宣言</h3>
+      <p class="j-hint">这是宇宙为你写下的，每天大声读出来</p>
+      <div id="j-affirmation-loading" class="j-loading">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+      </div>
+      <div id="j-affirmation-content" style="display:none">
+        <div id="j-aff-cards"></div>
+        <div class="j-final-actions">
+          <button class="j-btn-main" onclick="restartJourney()">开启新旅程 ✧</button>
+          <button class="j-btn-outline" onclick="go('daily',0)">回到每日显化</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PAGE 4: 显化仪式 -->
+<div id="page-ritual" class="page">
+  <div class="ritual-wrap">
+    <div class="ritual-hd">
+      <div class="ritual-title">21天显化仪式</div>
+      <div class="hero-line" style="margin:14px auto;"></div>
+      <p style="font-size:13px;letter-spacing:.1em;color:var(--muted);line-height:2;">每天只需10分钟，将意念编织进现实的织物</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-n">一</div><div><h3>晨间意图设定</h3><p>清晨醒来，在日记本中写下今日意图。以"我是"开头，用现在时态，仿佛已经拥有。让身体感受那份真实感。</p></div></div>
+      <div class="step"><div class="step-n">二</div><div><h3>肯定语冥想</h3><p>选择3-5条今日肯定语，闭眼深呼吸，让每句话在心中回响。感受它们在你细胞里振动的频率。</p></div></div>
+      <div class="step"><div class="step-n">三</div><div><h3>心愿板凝视</h3><p>花3分钟凝视你的心愿板，不是用思维分析，而是用感觉体验。让图像激活你体内对应的情绪频率。</p></div></div>
+      <div class="step"><div class="step-n">四</div><div><h3>感恩结尾</h3><p>写下今日3件感恩的事，包括尚未发生但你相信将会到来的美好。感恩是最高频的显化燃料。</p></div></div>
+      <div class="step"><div class="step-n">五</div><div><h3>放手与臣服</h3><p>完成后深吸一口气，将一切交还宇宙。显化的最后一步是放手——信任，然后行动，其余交给神圣时机。</p></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const cats=[
+  {id:'love',ic:'🌹',nm:'爱与关系',cards:['爱如光，自我而生，向外流淌，宇宙中所有美好的爱正向我涌来。','我值得被深深爱着，我的爱人正在寻找回到我身边的路。','我的关系充满理解与温柔，爱在我们之间自由流动。','我敞开心扉，接纳爱，也给予爱，联结是我的天然状态。']},
+  {id:'wealth',ic:'✨',nm:'丰盛财富',cards:['财富如河流，自然而然地流向我，我与丰盛同频共振。','我配得上一切美好的物质，金钱是宇宙爱我的证明。','我的每一个行动都在创造价值，收获与付出成倍回归。','丰盛是我的本质，匮乏只是一个我可以选择离开的故事。']},
+  {id:'health',ic:'🌿',nm:'健康活力',cards:['我的身体是神圣的居所，每个细胞都充满光与生命力。','健康是我的自然状态，我的身体每天都在自我愈合与更新。','我爱我的身体，它以充沛的活力回应我的爱。','生命力在我体内流淌，我感到轻盈、强壮、充满光芒。']},
+  {id:'conf',ic:'🔥',nm:'自信力量',cards:['我天生具有价值，不需要任何外在证明。','我的独特性是礼物，我站在自己的光芒中，毫不退缩。','我信任自己的判断，我的直觉是宇宙通过我说话。','我强大、睿智、充满力量，我选择活出最高版本的自己。']},
+  {id:'career',ic:'🌙',nm:'事业成功',cards:['我的才华被世界看见，我的事业正在以神圣的方式展开。','完美的机遇正向我汇聚，我准备好接受超出想象的成功。','我的工作充满意义，我的贡献创造真实的价值与影响力。','成功对我而言是自然的，我配得上卓越与繁荣。']},
+  {id:'peace',ic:'🕊️',nm:'内心平静',cards:['在一切变动之中，我内心有一处永恒的宁静。','我放下对结果的执念，臣服于当下这一刻的完整。','我选择平静，不是因为生活完美，而是因为我完整。','此刻，我安全，我被爱，我足够了。']},
+  {id:'charm',ic:'🌸',nm:'吸引力与魅力',cards:['我的内在光芒穿透皮肤向外散发，人们被我的能量所吸引。','我爱我所看见的自己，美从我的内在向外绽放。','我的气场如磁场，吸引所有与我高频共振的美好。','我是吸引力的中心，魅力是我真实存在的自然表达。']},
+  {id:'create',ic:'🦋',nm:'创造力与灵感',cards:['宇宙通过我创造，我是神圣灵感的管道。','我的创造力无限流淌，每个想法都是通往更大宇宙的门。','我信任创造的过程，即使在混沌中，也有秩序在涌现。','艺术、美、智慧——它们选择了我作为表达的器皿。']},
+  {id:'family',ic:'🌻',nm:'家庭与亲子',cards:['我的家是爱的圣地，温暖与和谐在这里自然生长。','我与家人的联结根植于深深的理解与尊重。','我以爱为桥梁，化解误解，深化每段家庭关系。','家是我永远可以回去的地方，爱在那里等待我。']},
+  {id:'protect',ic:'🛡️',nm:'保护与边界',cards:['我被宇宙之光守护，任何低频能量都无法穿透我的领域。','我清晰地知道自己的边界，我的"不"是一种神圣的爱。','我净化我的能量场，只留下滋养我灵魂的振动。','我是自己能量的守护者，我选择什么进入我的世界。']},
+  {id:'spirit',ic:'💫',nm:'灵性成长',cards:['我正在觉醒，每一天我都更接近真实的自己。','宇宙通过同步性与我对话，我睁开眼睛去看见。','我的灵魂有其旅程，我信任这段旅程的每一个章节。','我是宇宙意识的一部分，神圣的智慧通过我流动。']},
+  {id:'release',ic:'🌊',nm:'放下与疗愈',cards:['我温柔地释放一切不再服务于我的，为新的美好腾出空间。','过去已完成它的使命，我带着感恩放手，轻盈前行。','疗愈正在发生，我允许愈合，我允许自己完整。','我原谅自己，原谅他人，爱是唯一真实的现实。']}
+];
+let curCat=0,curIdx=0;
+
+function renderCats(){
+  document.getElementById('catGrid').innerHTML=cats.map((c,i)=>
+    `<button class="cat-btn${i===0?' active':''}" onclick="selCat(${i})"><span class="cat-icon">${c.ic}</span>${c.nm}</button>`
+  ).join('');
+}
+function selCat(i){
+  curCat=i;curIdx=0;
+  document.querySelectorAll('.cat-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+  updateCard();
+}
+function updateCard(){
+  const el=document.getElementById('cardTxt');
+  el.style.opacity=0;
+  setTimeout(()=>{
+    const c=cats[curCat];
+    document.getElementById('cardCat').textContent=c.ic+' '+c.nm;
+    el.textContent=c.cards[curIdx%c.cards.length];
+    el.style.opacity=1;
+  },240);
+}
+function nextCard(){curIdx++;updateCard();}
+function saveCard(btn){btn.textContent='已收藏 ✦';btn.style.background='var(--red)';setTimeout(()=>{btn.textContent='收藏 ✦';btn.style.background='var(--dark)';},1500);}
+
+// presets
+const presets=['我的生命目的是什么？','如何吸引真爱？','为什么我总感到恐惧？','灵魂死后去哪里？','金钱与爱有什么关系？','如何找到内心的平静？'];
+function renderPresets(){
+  document.getElementById('presetQ').innerHTML=presets.map(q=>`<button class="pq" onclick="askPreset('${q}')">${q}</button>`).join('');
+}
+function askPreset(q){document.getElementById('chatInput').value=q;sendMsg();}
+
+const history=[];
+async function sendMsg(){
+  const inp=document.getElementById('chatInput');
+  const q=inp.value.trim(); if(!q)return;
+  inp.value='';
+  const box=document.getElementById('chatBox');
+  const emp=box.querySelector('.chat-empty'); if(emp)emp.remove();
+  box.innerHTML+=`<div class="msg user"><div class="bubble">${q}</div></div>`;
+  const tid='t'+Date.now();
+  box.innerHTML+=`<div class="msg god" id="${tid}"><div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div></div>`;
+  box.scrollTop=box.scrollHeight;
+  history.push({role:'user',content:q});
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:`你是一个充满灵性智慧的存在，灵感来源于《与神对话》这本书的思想精髓。用温柔、深邃、充满诗意的中文回答问题。每次回答200字以内，简洁而深刻。结尾附上一句今日意图宣言（以"今日意图："开头）。语气温暖，如同智慧的长者与你同坐。`,messages:history})});
+    const d=await r.json();
+    const rep=d.content?.[0]?.text||'宇宙此刻在沉默中与你同在。';
+    document.getElementById(tid).remove();
+    history.push({role:'assistant',content:rep});
+    box.innerHTML+=`<div class="msg god"><div class="bubble">${rep}</div><div class="src">✦ 灵感来源：《与神对话》· 尼尔·唐纳德·沃尔什</div></div>`;
+    box.scrollTop=box.scrollHeight;
+  }catch(e){
+    document.getElementById(tid).remove();
+    box.innerHTML+=`<div class="msg god"><div class="bubble">宇宙此刻在沉默中与你同在。静心，答案自会浮现。</div></div>`;
+    box.scrollTop=box.scrollHeight;
+  }
+}
+
+function go(id,idx){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+  if(id==='journey') drawJourneyCanvas();
+}
+
+// ── JOURNEY STATE ──
+const jState={desire:'',questions:[],answers:[],qIdx:0};
+
+function startJourney(){
+  document.getElementById('j-entry').style.display='none';
+  document.getElementById('j-phase1').style.display='block';
+}
+
+function fillDesire(el){
+  document.getElementById('j-desire').value=el.textContent;
+}
+
+async function goPhase2(){
+  const desire=document.getElementById('j-desire').value.trim();
+  if(!desire)return;
+  jState.desire=desire;
+  jState.questions=[];jState.answers=[];jState.qIdx=0;
+  document.getElementById('j-phase1').style.display='none';
+  const p2=document.getElementById('j-phase2');
+  p2.style.display='block';
+  document.getElementById('j-q-title').textContent='宇宙正在聆听…';
+  document.getElementById('j-q-sub').textContent='';
+  document.getElementById('j-q-loading').style.display='block';
+  document.getElementById('j-q-content').style.display='none';
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:1000,
+      system:`你是一位引导显化旅程的灵性向导。用户说出了他们想显化的事物。
+你的任务是生成3个深度引导问题，帮助用户把模糊的愿望具象化为可感知的场景。
+问题风格：温柔、诗意、引发内心感受，而不是逻辑分析。
+用现在时提问，仿佛那个愿望已经实现。
+必须严格返回JSON格式，只返回JSON，不要任何其他文字：
+{"questions":["问题1","问题2","问题3"]}`,
+      messages:[{role:'user',content:`用户想显化：${desire}`}]
+    })});
+    const d=await res.json();
+    const txt=d.content?.[0]?.text||'{}';
+    const parsed=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    jState.questions=parsed.questions||['当这个愿望实现时，你在哪里？描述你周围的环境。','你的身体感受是什么？心里有什么情绪在流动？','身边有哪些人，他们看你的眼神是怎样的？'];
+  }catch(e){
+    jState.questions=['当这个愿望实现时，你正在哪里？闭眼感受那个空间。','你的内心是什么感受？喜悦、平静，还是一种深深的满足？','生命中哪些事情因为这个显化而改变了？'];
+  }
+  showQuestion();
+}
+
+function showQuestion(){
+  const i=jState.qIdx;
+  document.getElementById('j-q-loading').style.display='none';
+  document.getElementById('j-q-content').style.display='block';
+  document.getElementById('j-q-title').textContent='具象化你的未来';
+  document.getElementById('j-q-sub').textContent='感受这个问题，不要用头脑分析，用心来回答';
+  document.getElementById('j-question-box').textContent=jState.questions[i];
+  document.getElementById('j-answer').value='';
+  document.getElementById('j-q-counter').textContent=`问题 ${i+1} / 3`;
+}
+
+async function nextQuestion(){
+  const ans=document.getElementById('j-answer').value.trim();
+  if(!ans)return;
+  jState.answers.push(ans);
+  jState.qIdx++;
+  if(jState.qIdx<3){
+    document.getElementById('j-answer').value='';
+    document.getElementById('j-question-box').textContent=jState.questions[jState.qIdx];
+    document.getElementById('j-q-counter').textContent=`问题 ${jState.qIdx+1} / 3`;
+  } else {
+    await goPhase3();
+  }
+}
+
+async function goPhase3(){
+  document.getElementById('j-phase2').style.display='none';
+  const p3=document.getElementById('j-phase3');
+  p3.style.display='block';
+  document.getElementById('j-scene-loading').style.display='block';
+  document.getElementById('j-scene-content').style.display='none';
+
+  const context=jState.questions.map((q,i)=>`问题：${q}\n回答：${jState.answers[i]||''}`).join('\n\n');
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:1200,
+      system:`你是一位引导显化冥想的灵性叙述者。
+根据用户提供的愿望和回答，写一段沉浸式的未来场景，带领用户进入「已经实现」的未来。
+
+写作要求：
+- 用第二人称"你"，现在时态（不是"将会"，是"此刻"）
+- 250-320字，分3-4段，每段换行
+- 从感官细节入手：光线、气味、触感、声音
+- 越来越深入内心感受，最后一句话点燃情绪高峰
+- 语言诗意、温柔、充满画面感
+- 开头不要用"你好"，直接进入场景
+- 只返回场景文字，不要任何标题或注释`,
+      messages:[{role:'user',content:`用户想显化：${jState.desire}\n\n用户的回答：\n${context}`}]
+    })});
+    const d=await res.json();
+    const scene=d.content?.[0]?.text||'此刻，你已经到达了那个地方…';
+    document.getElementById('j-scene-loading').style.display='none';
+    document.getElementById('j-scene-content').style.display='block';
+    typewriterEffect('j-scene-box',scene,18);
+  }catch(e){
+    document.getElementById('j-scene-loading').style.display='none';
+    document.getElementById('j-scene-content').style.display='block';
+    document.getElementById('j-scene-box').textContent='此刻，你已经到达了那个美好的未来…\n\n闭上眼睛，深呼吸，感受那份已经实现的喜悦。';
+  }
+}
+
+function typewriterEffect(id,text,speed){
+  const el=document.getElementById(id);
+  el.textContent='';
+  let i=0;
+  const t=setInterval(()=>{
+    if(i<text.length){el.textContent+=text[i];i++;}
+    else clearInterval(t);
+  },speed);
+}
+
+async function goPhase4(){
+  document.getElementById('j-phase3').style.display='none';
+  const p4=document.getElementById('j-phase4');
+  p4.style.display='block';
+  document.getElementById('j-affirmation-loading').style.display='block';
+  document.getElementById('j-affirmation-content').style.display='none';
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:800,
+      system:`根据用户的显化意图，生成3条专属肯定语宣言。
+要求：
+- 第一人称，现在时（"我是"/"我有"/"我活在"）
+- 每条15-25字，充满力量和诗意
+- 三条从不同角度：内在状态 / 外在现实 / 宇宙连接
+- 严格返回JSON，只返回JSON：{"affirmations":["宣言1","宣言2","宣言3"]}`,
+      messages:[{role:'user',content:`用户的显化意图：${jState.desire}\n用户的感受：${jState.answers.join('；')}`}]
+    })});
+    const d=await res.json();
+    const txt=d.content?.[0]?.text||'{}';
+    const parsed=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    const affs=parsed.affirmations||['我活在爱与丰盛之中，一切已然圆满。','我所渴望的，正以最完美的方式向我涌来。','我与宇宙同频，神圣的时机正在展开。'];
+    document.getElementById('j-affirmation-loading').style.display='none';
+    document.getElementById('j-affirmation-content').style.display='block';
+    const labels=['内在状态','外在现实','宇宙连接'];
+    document.getElementById('j-aff-cards').innerHTML=affs.map((a,i)=>`
+      <div class="j-aff-card">
+        <div class="j-aff-num">✦ ${labels[i]}</div>
+        <div class="j-aff-text">${a}</div>
+      </div>`).join('');
+  }catch(e){
+    document.getElementById('j-affirmation-loading').style.display='none';
+    document.getElementById('j-affirmation-content').style.display='block';
+    document.getElementById('j-aff-cards').innerHTML=`
+      <div class="j-aff-card"><div class="j-aff-num">✦ 内在状态</div><div class="j-aff-text">我活在爱与丰盛之中，一切已然圆满。</div></div>
+      <div class="j-aff-card"><div class="j-aff-num">✦ 外在现实</div><div class="j-aff-text">我所渴望的，正以最完美的方式向我涌来。</div></div>
+      <div class="j-aff-card"><div class="j-aff-num">✦ 宇宙连接</div><div class="j-aff-text">我与宇宙同频，神圣的时机正在展开。</div></div>`;
+  }
+}
+
+function restartJourney(){
+  document.querySelectorAll('.j-phase').forEach(p=>p.style.display='none');
+  document.getElementById('j-entry').style.display='block';
+  document.getElementById('j-desire').value='';
+  Object.assign(jState,{desire:'',questions:[],answers:[],qIdx:0});
+}
+
+// ── JOURNEY CANVAS: warm dusk garden ──
+function drawJourneyCanvas(){
+  const cv=document.getElementById('journeyCanvas');
+  if(!cv)return;
+  const dpr=window.devicePixelRatio||1;
+  const W=window.innerWidth, H=window.innerHeight;
+  cv.width=W*dpr; cv.height=H*dpr;
+  cv.style.width=W+'px'; cv.style.height=H+'px';
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  // warm dusk wash
+  ctx.fillStyle='#f8f2e8'; ctx.fillRect(0,0,W,H);
+  const wash=ctx.createRadialGradient(W*0.5,H*0.35,0,W*0.5,H*0.35,W*0.65);
+  wash.addColorStop(0,'rgba(255,220,160,0.22)');
+  wash.addColorStop(1,'rgba(248,242,232,0)');
+  ctx.fillStyle=wash; ctx.fillRect(0,0,W,H);
+
+  const g='rgba(80,120,65,', gd='rgba(120,80,50,', gld='rgba(201,169,110,';
+
+  // soft vines left & right
+  [[W*0.04,0],[W*0.96,0],[W*0.02,H*0.5],[W*0.98,H*0.5]].forEach(([x,y],i)=>{
+    ctx.beginPath(); ctx.moveTo(x,y);
+    const dx=(i%2===0?1:-1)*40;
+    ctx.bezierCurveTo(x+dx,y+H*0.2, x-dx,y+H*0.4, x+dx*0.5,y+H*0.65);
+    ctx.strokeStyle=`${g}0.2)`; ctx.lineWidth=1.4; ctx.stroke();
+    for(let j=0;j<7;j++){
+      const t=j/7, lx=x+dx*(0.5-t*0.3), ly=y+H*0.65*t;
+      const la=Math.atan2(H*0.65,dx)+(j%2===0?0.7:-0.7);
+      drawLeaf(ctx,lx,ly,16+Math.random()*14,la,g,0.22+Math.random()*0.15);
+    }
+  });
+
+  // scattered small gold flowers
+  for(let i=0;i<30;i++){
+    const x=Math.random()*W, y=Math.random()*H;
+    drawSmallFlower5(ctx,x,y,5+Math.random()*7,'pink');
+  }
+  for(let i=0;i<20;i++){
+    const x=Math.random()*W, y=Math.random()*H;
+    ctx.beginPath(); ctx.arc(x,y,1.5+Math.random()*2,0,Math.PI*2);
+    ctx.fillStyle=`${gld}${0.2+Math.random()*0.25})`; ctx.fill();
+  }
+
+  // bottom flower border (lighter, more airy)
+  for(let i=0;i<12;i++){
+    const x=W*(0.04+i*0.085), y=H*(0.82+Math.random()*0.1);
+    drawBigFlower(ctx,x,y,14+Math.random()*10,['pink','white'][Math.floor(Math.random()*2)],Math.random());
+  }
+}
+
+// ═══════════════════════════════════════════════
+//   ENGLISH GARDEN CANVAS
+// ═══════════════════════════════════════════════
+function drawGarden(){
+  const cv=document.getElementById('gardenBg');
+  const dpr=window.devicePixelRatio||1;
+  const W=window.innerWidth;
+  const H=Math.max(document.body.scrollHeight,window.innerHeight,1600);
+  cv.width=W*dpr;
+  cv.height=H*dpr;
+  cv.style.width=W+'px';
+  cv.style.height=H+'px';
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.save();
+  ctx.clearRect(0,0,W,H);
+
+  // Cream base
+  ctx.fillStyle='#faf6f0';ctx.fillRect(0,0,W,H);
+
+  // ── distant garden landscape (centre) ──
+  // soft green lawn wash
+  const grd=ctx.createLinearGradient(0,H*0.38,0,H*0.62);
+  grd.addColorStop(0,'rgba(180,210,160,0)');
+  grd.addColorStop(0.4,'rgba(155,195,130,0.18)');
+  grd.addColorStop(1,'rgba(140,185,115,0)');
+  ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
+
+  // ── TOPIARY BUSHES (rounded hedge shapes) ──
+  const bushes=[[W*0.3,H*0.44,55,40],[W*0.45,H*0.42,45,35],[W*0.55,H*0.42,48,36],[W*0.7,H*0.44,52,38]];
+  bushes.forEach(([x,y,rw,rh])=>{
+    ctx.beginPath();ctx.ellipse(x,y,rw,rh,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(80,130,70,0.12)';ctx.fill();
+    ctx.strokeStyle='rgba(60,100,55,0.18)';ctx.lineWidth=1;ctx.stroke();
+  });
+
+  // ── STONE FOUNTAIN (centre) ──
+  const fx=W*0.5,fy=H*0.46;
+  // basin
+  ctx.beginPath();ctx.ellipse(fx,fy+22,36,10,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(190,175,155,0.25)';ctx.fill();
+  ctx.strokeStyle='rgba(170,155,130,0.4)';ctx.lineWidth=1;ctx.stroke();
+  // pedestal
+  ctx.beginPath();ctx.rect(fx-5,fy-15,10,37);
+  ctx.fillStyle='rgba(200,185,165,0.28)';ctx.fill();
+  // top bowl
+  ctx.beginPath();ctx.ellipse(fx,fy-15,18,5,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(200,185,165,0.28)';ctx.fill();
+  ctx.strokeStyle='rgba(170,155,130,0.4)';ctx.lineWidth=1;ctx.stroke();
+  // water arcs
+  for(let i=0;i<5;i++){
+    const a=(i/5)*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(fx,fy-17);
+    ctx.quadraticCurveTo(fx+Math.cos(a)*14,fy-30,fx+Math.cos(a)*20,fy-12);
+    ctx.strokeStyle='rgba(140,185,210,0.22)';ctx.lineWidth=0.8;ctx.stroke();
+  }
+
+  // ── PEACOCK LEFT ──
+  drawPeacock(ctx,W*0.3,H*0.5,1);
+  // ── PEACOCK RIGHT (facing left) ──
+  drawPeacock(ctx,W*0.7,H*0.5,-1);
+
+  // ── LARGE FOREGROUND FLOWERS (bottom dense border) ──
+  const fgFlowers=[
+    // pink peonies
+    ...[...Array(14)].map((_,i)=>({x:W*(0.02+i*0.072),y:H*(0.7+Math.random()*0.12),r:22+Math.random()*14,col:'pink',var:Math.random()})),
+    // white/cream flowers
+    ...[...Array(10)].map((_,i)=>({x:W*(0.05+i*0.1),y:H*(0.76+Math.random()*0.1),r:18+Math.random()*12,col:'white',var:Math.random()})),
+    // blue/lilac
+    ...[...Array(8)].map((_,i)=>({x:W*(0.08+i*0.12),y:H*(0.66+Math.random()*0.08),r:12+Math.random()*8,col:'blue',var:Math.random()})),
+  ];
+  fgFlowers.forEach(f=>drawBigFlower(ctx,f.x,f.y,f.r,f.col,f.var));
+
+  // ── SIDE CLUSTERS (left & right borders) ──
+  const sideL=[[W*0.02,H*0.1],[W*0.0,H*0.28],[W*0.03,H*0.45],[W*0.0,H*0.6]];
+  const sideR=[[W*0.96,H*0.08],[W*0.99,H*0.25],[W*0.97,H*0.43],[W*0.98,H*0.58]];
+  [...sideL,...sideR].forEach(([x,y])=>{
+    for(let i=0;i<6;i++)drawBigFlower(ctx,x+(Math.random()-0.5)*60,y+(Math.random()-0.5)*50,14+Math.random()*12,['pink','white','blue','lilac'][Math.floor(Math.random()*4)],Math.random());
+    drawLeafCluster(ctx,x,y);
+  });
+
+  // ── TOP CORNER FLORAL SPRAYS ──
+  drawFloralSpray(ctx,0,0,'tl');
+  drawFloralSpray(ctx,W,0,'tr');
+
+  // ── SCATTERED SMALL FLOWERS (mid area) ──
+  for(let i=0;i<35;i++){
+    const x=Math.random()*W, y=H*0.1+Math.random()*H*0.55;
+    drawSmallFlower5(ctx,x,y,6+Math.random()*6,['pink','blue','lilac','white'][Math.floor(Math.random()*4)]);
+  }
+
+  // ── BUTTERFLIES ──
+  const bpos=[[W*0.22,H*0.2],[W*0.75,H*0.15],[W*0.48,H*0.3],[W*0.15,H*0.55],[W*0.88,H*0.4],[W*0.6,H*0.22]];
+  bpos.forEach(([x,y])=>drawButterfly(ctx,x,y));
+  ctx.restore();
+
+  // ── STEMS & LEAVES (mid layer) ──
+  for(let i=0;i<22;i++){
+    const x=Math.random()*W,y=H*0.45+Math.random()*H*0.3;
+    drawStem(ctx,x,y,40+Math.random()*50,'rgba(80,120,70,0.35)');
+  }
+
+  // ── GOLD ORNAMENTAL BORDER (like Dior card frame) ──
+  drawGoldBorder(ctx,W,H);
+}
+
+function drawPeacock(ctx,x,y,dir){
+  ctx.save();ctx.translate(x,y);ctx.scale(dir,1);
+  // tail fan
+  const tailColors=['rgba(30,120,140,0.35)','rgba(60,80,160,0.3)','rgba(100,140,50,0.28)','rgba(80,110,160,0.3)'];
+  for(let i=0;i<12;i++){
+    const a=-Math.PI/2+(-0.7+i*0.13);
+    ctx.beginPath();ctx.moveTo(0,0);
+    ctx.bezierCurveTo(Math.cos(a)*30,Math.sin(a)*30,Math.cos(a)*55,Math.sin(a)*55,Math.cos(a)*70,Math.sin(a)*70);
+    ctx.strokeStyle=tailColors[i%4];ctx.lineWidth=1.8;ctx.stroke();
+    // eye spots
+    ctx.beginPath();ctx.arc(Math.cos(a)*65,Math.sin(a)*65,4,0,Math.PI*2);
+    ctx.strokeStyle='rgba(30,100,130,0.28)';ctx.lineWidth=1;ctx.stroke();
+    ctx.beginPath();ctx.arc(Math.cos(a)*65,Math.sin(a)*65,2,0,Math.PI*2);
+    ctx.fillStyle='rgba(60,140,160,0.22)';ctx.fill();
+  }
+  // body
+  ctx.beginPath();ctx.ellipse(0,5,9,16,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(40,90,120,0.3)';ctx.fill();
+  // neck
+  ctx.beginPath();ctx.moveTo(0,-11);ctx.quadraticCurveTo(4,-22,2,-34);
+  ctx.strokeStyle='rgba(40,100,130,0.38)';ctx.lineWidth=5;ctx.stroke();
+  // head
+  ctx.beginPath();ctx.arc(2,-36,5,0,Math.PI*2);
+  ctx.fillStyle='rgba(40,110,140,0.35)';ctx.fill();
+  // crest
+  for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(2,-41);ctx.lineTo(2+(-4+i*3),-52);ctx.strokeStyle='rgba(40,130,80,0.35)';ctx.lineWidth=0.8;ctx.stroke();}
+  // legs
+  ctx.beginPath();ctx.moveTo(-3,20);ctx.lineTo(-4,34);ctx.moveTo(3,20);ctx.lineTo(4,34);
+  ctx.strokeStyle='rgba(140,110,70,0.4)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.restore();
+}
+
+function drawBigFlower(ctx,x,y,r,col,v){
+  const colors={
+    pink:['rgba(230,170,185,0.75)','rgba(215,140,160,0.6)','rgba(245,200,210,0.5)'],
+    white:['rgba(245,240,232,0.85)','rgba(230,220,205,0.65)','rgba(255,250,245,0.55)'],
+    blue:['rgba(160,185,215,0.7)','rgba(130,160,200,0.55)','rgba(180,200,225,0.5)'],
+    lilac:['rgba(185,165,210,0.65)','rgba(165,145,195,0.5)','rgba(205,185,225,0.5)'],
+  };
+  const c=colors[col]||colors.pink;
+  const petals=5+Math.floor(v*4);
+  for(let layer=2;layer>=0;layer--){
+    for(let p=0;p<petals;p++){
+      const a=(p/petals)*Math.PI*2+(layer*0.25)+v;
+      const pr=r*(0.55+layer*0.2);
+      ctx.beginPath();
+      ctx.ellipse(x+Math.cos(a)*pr*0.55,y+Math.sin(a)*pr*0.55,pr*0.45,pr*0.25,a,0,Math.PI*2);
+      ctx.fillStyle=c[layer];ctx.fill();
+      ctx.strokeStyle=c[1];ctx.lineWidth=0.5;ctx.stroke();
+    }
+  }
+  // centre
+  ctx.beginPath();ctx.arc(x,y,r*0.22,0,Math.PI*2);
+  ctx.fillStyle='rgba(240,200,100,0.55)';ctx.fill();
+  ctx.strokeStyle='rgba(200,160,60,0.4)';ctx.lineWidth=0.5;ctx.stroke();
+}
+
+function drawSmallFlower5(ctx,x,y,r,col){
+  const map={pink:'rgba(230,165,185,0.55)',blue:'rgba(155,185,215,0.55)',lilac:'rgba(185,160,215,0.55)',white:'rgba(240,235,225,0.6)'};
+  for(let i=0;i<5;i++){
+    const a=(i/5)*Math.PI*2;
+    ctx.beginPath();ctx.ellipse(x+Math.cos(a)*r,y+Math.sin(a)*r,r*0.7,r*0.38,a,0,Math.PI*2);
+    ctx.fillStyle=map[col]||map.pink;ctx.fill();
+  }
+  ctx.beginPath();ctx.arc(x,y,r*0.32,0,Math.PI*2);
+  ctx.fillStyle='rgba(240,210,110,0.6)';ctx.fill();
+}
+
+function drawLeafCluster(ctx,x,y){
+  const greens=['rgba(70,110,60,0.35)','rgba(90,130,75,0.3)','rgba(55,95,50,0.28)'];
+  for(let i=0;i<8;i++){
+    const a=Math.random()*Math.PI*2,len=25+Math.random()*30;
+    ctx.save();ctx.translate(x+(Math.random()-0.5)*40,y+(Math.random()-0.5)*40);ctx.rotate(a);
+    ctx.beginPath();ctx.moveTo(0,0);
+    ctx.bezierCurveTo(len*0.3,-len*0.22,len*0.7,-len*0.18,len,0);
+    ctx.bezierCurveTo(len*0.7,len*0.18,len*0.3,len*0.22,0,0);
+    ctx.fillStyle=greens[i%3];ctx.fill();ctx.restore();
+  }
+}
+
+function drawFloralSpray(ctx,x,y,corner){
+  const sx=corner==='tl'?x+10:x-10, sy=y+10;
+  const dir=corner==='tl'?1:-1;
+  // main branch
+  ctx.beginPath();ctx.moveTo(sx,sy);
+  ctx.bezierCurveTo(sx+dir*60,sy+40,sx+dir*100,sy+80,sx+dir*80,sy+130);
+  ctx.strokeStyle='rgba(80,120,65,0.35)';ctx.lineWidth=1.5;ctx.stroke();
+  // flowers on spray
+  const sprayPts=[[sx+dir*25,sy+30],[sx+dir*55,sy+55],[sx+dir*75,sy+90],[sx+dir*65,sy+120],[sx+dir*40,sy+70],[sx+dir*20,sy*1+50]];
+  sprayPts.forEach(([px,py],i)=>{
+    drawBigFlower(ctx,px,py,12+Math.random()*10,['pink','white','blue','lilac'][i%4],Math.random());
+  });
+  drawLeafCluster(ctx,sx+dir*50,sy+70);
+}
+
+function drawButterfly(ctx,x,y){
+  ctx.save();ctx.translate(x,y);
+  const s=0.7+Math.random()*0.6;ctx.scale(s,s);
+  // wings
+  const bcols=['rgba(200,180,100,0.4)','rgba(160,195,140,0.38)','rgba(185,155,215,0.38)'];
+  const bc=bcols[Math.floor(Math.random()*3)];
+  [1,-1].forEach(d=>{
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.bezierCurveTo(d*8,-14,d*22,-16,d*20,-4);
+    ctx.bezierCurveTo(d*18,4,d*8,6,0,0);
+    ctx.fillStyle=bc;ctx.fill();ctx.strokeStyle='rgba(100,80,50,0.28)';ctx.lineWidth=0.6;ctx.stroke();
+    // lower wing
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.bezierCurveTo(d*10,4,d*18,12,d*14,18);
+    ctx.bezierCurveTo(d*8,22,d*2,12,0,0);
+    ctx.fillStyle=bc;ctx.fill();ctx.strokeStyle='rgba(100,80,50,0.28)';ctx.lineWidth=0.6;ctx.stroke();
+  });
+  // body
+  ctx.beginPath();ctx.ellipse(0,4,1.5,8,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(80,60,40,0.4)';ctx.fill();
+  ctx.restore();
+}
+
+function drawStem(ctx,x,y,h,col){
+  ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+(Math.random()-0.5)*20,y-h*0.5,x+(Math.random()-0.5)*10,y-h);
+  ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();
+}
+
+function drawGoldBorder(ctx,W,H){
+  // outer gold frame lines
+  const m=18,g='rgba(201,169,110,';
+  // top & bottom heavy lines
+  ctx.beginPath();ctx.moveTo(m,m);ctx.lineTo(W-m,m);
+  ctx.strokeStyle=`${g}0.55)`;ctx.lineWidth=1.5;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(m,H-m);ctx.lineTo(W-m,H-m);
+  ctx.strokeStyle=`${g}0.55)`;ctx.lineWidth=1.5;ctx.stroke();
+  // left & right
+  ctx.beginPath();ctx.moveTo(m,m);ctx.lineTo(m,H-m);
+  ctx.strokeStyle=`${g}0.55)`;ctx.lineWidth=1.5;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(W-m,m);ctx.lineTo(W-m,H-m);
+  ctx.strokeStyle=`${g}0.55)`;ctx.lineWidth=1.5;ctx.stroke();
+
+  // inner thinner frame
+  const m2=28;
+  ctx.beginPath();ctx.rect(m2,m2,W-m2*2,H-m2*2);
+  ctx.strokeStyle=`${g}0.28)`;ctx.lineWidth=0.7;ctx.stroke();
+
+  // corner ornaments
+  [[m,m,0],[W-m,m,Math.PI/2],[m,H-m,-Math.PI/2],[W-m,H-m,Math.PI]].forEach(([cx,cy,rot])=>{
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(rot);
+    // small diamond
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(8,8);ctx.lineTo(0,16);ctx.lineTo(-8,8);ctx.closePath();
+    ctx.strokeStyle=`${g}0.5)`;ctx.lineWidth=0.8;ctx.stroke();
+    // cross flare
+    ctx.beginPath();ctx.moveTo(-12,0);ctx.lineTo(12,0);ctx.moveTo(0,-12);ctx.lineTo(0,12);
+    ctx.strokeStyle=`${g}0.28)`;ctx.lineWidth=0.5;ctx.stroke();
+    ctx.restore();
+  });
+
+  // top centre ornament
+  ctx.save();ctx.translate(W/2,m);
+  ctx.beginPath();ctx.moveTo(-30,0);ctx.lineTo(-10,0);ctx.moveTo(10,0);ctx.lineTo(30,0);
+  ctx.strokeStyle=`${g}0.4)`;ctx.lineWidth=0.8;ctx.stroke();
+  ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);
+  ctx.strokeStyle=`${g}0.45)`;ctx.lineWidth=0.8;ctx.stroke();
+  ctx.restore();
+}
+
+// INIT
+renderCats();
+renderPresets();
+drawGarden();
+window.addEventListener('resize',drawGarden);
+</script>
+</body>
+</html>
