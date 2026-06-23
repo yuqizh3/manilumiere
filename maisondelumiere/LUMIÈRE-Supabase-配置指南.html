@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIÈRE Supabase 完整配置指南</title>
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  color: #333;
+  line-height: 1.6;
+  background: linear-gradient(135deg, #faf6f0 0%, #f5f0e8 100%);
+}
+
+h1 {
+  color: #1a1510;
+  border-bottom: 3px solid #c9a96e;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+  font-size: 2.5em;
+}
+
+h2 {
+  color: #1a1510;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h3 {
+  color: #2c2218;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+h4 {
+  color: #8a7560;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+code {
+  background: rgba(201, 169, 110, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  color: #8b4a5a;
+}
+
+pre {
+  background: #1a1510;
+  color: #e2c99a;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.85em;
+  line-height: 1.5;
+  border-left: 4px solid #c9a96e;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: #e2c99a;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+}
+
+th {
+  background: rgba(201, 169, 110, 0.15);
+  font-weight: 600;
+  color: #1a1510;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover {
+  background: rgba(201, 169, 110, 0.05);
+}
+
+ul, ol {
+  margin: 15px 0;
+  padding-left: 25px;
+}
+
+li {
+  margin: 8px 0;
+}
+
+.checkbox {
+  margin-right: 10px;
+}
+
+.highlight {
+  background: rgba(232, 242, 228, 0.5);
+  padding: 15px;
+  border-left: 4px solid #3d6b3a;
+  border-radius: 4px;
+  margin: 15px 0;
+}
+
+.warning {
+  background: rgba(139, 74, 90, 0.1);
+  padding: 15px;
+  border-left: 4px solid #8b4a5a;
+  border-radius: 4px;
+  margin: 15px 0;
+}
+
+.success {
+  background: rgba(61, 107, 58, 0.1);
+  padding: 15px;
+  border-left: 4px solid #3d6b3a;
+  border-radius: 4px;
+  margin: 15px 0;
+}
+
+.step-number {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  background: #c9a96e;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 28px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+a {
+  color: #c9a96e;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+a:hover {
+  border-bottom-color: #c9a96e;
+}
+
+.footer {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(201, 169, 110, 0.3);
+  text-align: center;
+  color: #8a7560;
+  font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 20px 15px;
+  }
+
+  h1 {
+    font-size: 1.8em;
+  }
+
+  h2 {
+    font-size: 1.4em;
+  }
+
+  table {
+    font-size: 0.9em;
+  }
+
+  th, td {
+    padding: 10px;
+  }
+}
+
+.print-notice {
+  background: rgba(201, 169, 110, 0.1);
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 0.9em;
+  color: #8a7560;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .print-notice {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="print-notice">
+💡 你可以用浏览器的打印功能（Ctrl/Cmd + P）保存为 PDF
+</div>
+
+<h1>✦ LUMIÈRE Supabase 完整配置指南</h1>
+
+<div class="highlight">
+<strong>⏱️ 总耗时：</strong> 约 15-20 分钟<br>
+<strong>🎯 完成后：</strong> 你将拥有一个完整的灵性应用后端系统
+</div>
+
+<h2>第一步：创建 Supabase 项目</h2>
+
+<h3><span class="step-number">1</span>注册/登陆 Supabase</h3>
+<ul>
+<li>访问 <a href="https://supabase.com" target="_blank">https://supabase.com</a></li>
+<li>用 GitHub 或 Google 账号登陆</li>
+<li>点击 <code>New Project</code></li>
+</ul>
+
+<h3><span class="step-number">2</span>创建项目</h3>
+<ul>
+<li><strong>Project Name:</strong> <code>lumiere</code></li>
+<li><strong>Database Password:</strong> 设置一个强密码（保存好！）</li>
+<li><strong>Region:</strong> 选择离你最近的地区（例如 Singapore 或 Tokyo）</li>
+<li>点击 <code>Create new project</code></li>
+</ul>
+
+<div class="warning">
+⚠️ <strong>等待 3-5 分钟</strong>，项目创建中...
+</div>
+
+<h3><span class="step-number">3</span>获取连接信息</h3>
+<p>项目创建后，进入 <strong>Settings → Database</strong> 页面</p>
+
+<p><strong>你需要记录：</strong></p>
+<ul>
+<li><strong>Project URL:</strong> 看起来像 <code>https://xxxxx.supabase.co</code></li>
+<li><strong>Service Role Key:</strong> 在 <strong>Settings → API</strong> 中的 <code>service_role secret</code>（保密！）</li>
+</ul>
+
+---
+
+<h2>第二步：创建数据库表</h2>
+
+<h3><span class="step-number">1</span>进入 SQL Editor</h3>
+<p>在 Supabase 仪表板左侧菜单，点击 <strong>SQL Editor</strong></p>
+
+<h3><span class="step-number">2</span>创建新查询</h3>
+<p>点击 <code>+ New Query</code>，粘贴下面的 SQL 代码：</p>
+
+<pre><code>-- 创建 users 表
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  last_login TIMESTAMP,
+  CONSTRAINT email_not_empty CHECK (email != '')
+);
+
+-- 创建 user_profiles 表
+CREATE TABLE user_profiles (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  credits INT DEFAULT 100,
+  total_earned INT DEFAULT 100,
+  total_spent INT DEFAULT 0,
+  invite_code VARCHAR(8),
+  first_login BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 创建 check_ins 表 (签到)
+CREATE TABLE check_ins (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  checked_at DATE NOT NULL,
+  streak_count INT DEFAULT 1,
+  reward_amount INT DEFAULT 5,
+  created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, checked_at)
+);
+
+-- 创建 transactions 表 (交易流水)
+CREATE TABLE transactions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  amount INT NOT NULL,
+  type VARCHAR(50),
+  description TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 创建 manifestation_logs 表 (显化日志)
+CREATE TABLE manifestation_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  category VARCHAR(50),
+  affirmation_text TEXT,
+  custom_notes TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 创建 self_discovery_entries 表 (30天自我认识)
+CREATE TABLE self_discovery_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  day INT CHECK (day BETWEEN 1 AND 30),
+  question TEXT NOT NULL,
+  answer TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, day)
+);
+
+-- 创建 notes 表 (笔记)
+CREATE TABLE notes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255),
+  content TEXT NOT NULL,
+  tags TEXT[],
+  related_manifestation_id UUID,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 创建 journal_entries 表 (日记)
+CREATE TABLE journal_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255),
+  content TEXT,
+  desires TEXT,
+  image_url VARCHAR(500),
+  image_generated_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 创建索引以提升查询性能
+CREATE INDEX idx_check_ins_user_id ON check_ins(user_id);
+CREATE INDEX idx_check_ins_date ON check_ins(checked_at);
+CREATE INDEX idx_manifestation_logs_user_id ON manifestation_logs(user_id);
+CREATE INDEX idx_self_discovery_entries_user_id ON self_discovery_entries(user_id);
+CREATE INDEX idx_notes_user_id ON notes(user_id);
+CREATE INDEX idx_journal_entries_user_id ON journal_entries(user_id);
+CREATE INDEX idx_transactions_user_id ON transactions(user_id);
+
+-- 启用 RLS (行级安全)
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE check_ins ENABLE ROW LEVEL SECURITY;
+ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE manifestation_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE self_discovery_entries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE journal_entries ENABLE ROW LEVEL SECURITY;
+
+-- 设置 RLS 策略
+CREATE POLICY "Users can read own data" ON users FOR SELECT USING (true);
+CREATE POLICY "Users can read own profile" ON user_profiles FOR SELECT USING (true);
+CREATE POLICY "Users can read own check_ins" ON check_ins FOR SELECT USING (true);
+CREATE POLICY "Users can read own transactions" ON transactions FOR SELECT USING (true);
+CREATE POLICY "Users can read own manifestation_logs" ON manifestation_logs FOR SELECT USING (true);
+CREATE POLICY "Users can read own self_discovery_entries" ON self_discovery_entries FOR SELECT USING (true);
+CREATE POLICY "Users can read own notes" ON notes FOR SELECT USING (true);
+CREATE POLICY "Users can read own journal_entries" ON journal_entries FOR SELECT USING (true);</code></pre>
+
+<h3><span class="step-number">3</span>执行 SQL</h3>
+<p>点击右上角的 <strong>Run</strong> 按钮执行所有 SQL</p>
+
+<div class="success">
+✓ 如果没有错误显示，所有表都已创建成功！
+</div>
+
+---
+
+<h2>第三步：配置环境变量</h2>
+
+<h3><span class="step-number">1</span>创建 .env.local 文件</h3>
+<p>在项目根目录创建 <code>.env.local</code> 文件，填入以下内容：</p>
+
+<pre><code># Supabase
+SUPABASE_URL=https://xxxxx.supabase.co
+SUPABASE_SERVICE_KEY=eyJhbGc...（你的 service_role key）
+
+# Anthropic (Claude API)
+ANTHROPIC_API_KEY=sk-ant-...（你的 Claude API key）</code></pre>
+
+<h3><span class="step-number">2</span>获取密钥详细步骤</h3>
+
+<p><strong>SUPABASE_URL：</strong></p>
+<ul>
+<li>在 Supabase 仪表板 → Settings → API</li>
+<li>复制 "Project URL"</li>
+</ul>
+
+<p><strong>SUPABASE_SERVICE_KEY：</strong></p>
+<ul>
+<li>在 Supabase 仪表板 → Settings → API</li>
+<li>复制 "service_role secret"</li>
+<li>⚠️ 保密！不要分享！</li>
+</ul>
+
+<p><strong>ANTHROPIC_API_KEY：</strong></p>
+<ul>
+<li>访问 <a href="https://console.anthropic.com" target="_blank">https://console.anthropic.com</a></li>
+<li>进入 API Keys 页面</li>
+<li>创建或复制你的 API Key</li>
+</ul>
+
+<h3><span class="step-number">3</span>添加到 .gitignore</h3>
+<pre><code>.env.local
+.env.*.local</code></pre>
+
+<div class="warning">
+⚠️ <strong>安全提示：</strong><br>
+✅ DO: 在 .env.local 中保存密钥，在 .gitignore 中添加<br>
+❌ DON'T: 把密钥 commit 到 git，分享给任何人
+</div>
+
+---
+
+<h2>第四步：本地测试（可选）</h2>
+
+<h3><span class="step-number">1</span>安装 Netlify CLI</h3>
+<pre><code>npm install -g netlify-cli</code></pre>
+
+<h3><span class="step-number">2</span>启动本地开发服务器</h3>
+<pre><code>netlify dev</code></pre>
+
+<p>访问 <code>http://localhost:8888</code></p>
+
+---
+
+<h2>第五步：验证配置</h2>
+
+<h3>检查清单：</h3>
+<table>
+<tr>
+<th>项目</th>
+<th>状态</th>
+<th>检查方法</th>
+</tr>
+<tr>
+<td>Supabase 项目创建</td>
+<td>☐</td>
+<td>能访问 supabase.com 仪表板</td>
+</tr>
+<tr>
+<td>所有表已创建</td>
+<td>☐</td>
+<td>在 Table Editor 中看到 8 个表</td>
+</tr>
+<tr>
+<td>环境变量已配置</td>
+<td>☐</td>
+<td>.env.local 文件存在且包含 3 个密钥</td>
+</tr>
+<tr>
+<td>本地连接测试</td>
+<td>☐</td>
+<td>运行 netlify dev，无错误</td>
+</tr>
+<tr>
+<td>API 密钥有效</td>
+<td>☐</td>
+<td>能成功调用 API 端点</td>
+</tr>
+</table>
+
+---
+
+<h2>常见问题排查</h2>
+
+<h3>❌ 问题：连接失败 "SUPABASE_URL is not defined"</h3>
+<p><strong>✓ 解决：</strong></p>
+<ul>
+<li>检查 .env.local 是否在项目根目录</li>
+<li>确认变量名拼写正确（注意大小写）</li>
+<li>重启 netlify dev</li>
+</ul>
+
+<h3>❌ 问题：权限错误 "insufficient privilege"</h3>
+<p><strong>✓ 解决：</strong></p>
+<ul>
+<li>确保使用的是 SUPABASE_SERVICE_KEY（不是 anon key）</li>
+<li>检查密钥是否完整复制</li>
+</ul>
+
+<h3>❌ 问题：表不存在</h3>
+<p><strong>✓ 解决：</strong></p>
+<ul>
+<li>在 SQL Editor 中重新运行创建表的 SQL</li>
+<li>检查是否有 SQL 错误提示</li>
+<li>确保所有表都在 Table Editor 中可见</li>
+</ul>
+
+<h3>❌ 问题："Service Role Key" 找不到</h3>
+<p><strong>✓ 解决：</strong></p>
+<ul>
+<li>进入 Supabase 仪表板 → Settings → API</li>
+<li>在下方找到 "service_role secret" 部分</li>
+<li>点击显示/复制按钮</li>
+</ul>
+
+---
+
+<h2>✅ 下一步</h2>
+
+<p>完成以上配置后，你就可以：</p>
+<ol>
+<li>✓ 进行完整的功能测试</li>
+<li>✓ 部署到 Netlify</li>
+<li>✓ 邀请用户使用 LUMIÈRE</li>
+<li>✓ 监控应用运行状态</li>
+</ol>
+
+<div class="success">
+<strong>🎉 配置完成！</strong><br>
+告诉我你已完成所有步骤，我将帮你进行完整的功能测试。
+</div>
+
+<div class="footer">
+<p>LUMIÈRE · 显化圣所</p>
+<p>Made with ✨ and 🌸</p>
+<p style="margin-top: 20px; font-size: 0.8em;">© 2024 · 配置指南 v1.0</p>
+</div>
+
+</body>
+</html>
