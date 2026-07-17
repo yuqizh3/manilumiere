@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30天自我探索 · LUMIÈRE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+SC:wght@300;400;500&family=LXGW+WenKai+TC:wght@300;400&display=swap');
+:root{--cream:#faf6f0;--dark:#1a1510;--gold:#c9a96e;--gold-light:#e2c99a;--red:#8b4a5a;--green:#3d6b3a;--text:#2c2218;--muted:#8a7560;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;min-height:100vh;padding:0 0 60px;}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 20px;max-width:720px;margin:0 auto;}
+.logo{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:20px;letter-spacing:0.22em;color:var(--gold);cursor:pointer;}
+.back{font-size:13px;color:var(--muted);text-decoration:none;letter-spacing:0.05em;}
+.back:hover{color:var(--gold);}
+
+.hero{text-align:center;padding:14px 0 28px;}
+.hero h1{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:clamp(32px,5vw,46px);font-weight:300;letter-spacing:0.08em;color:var(--dark);}
+.hero .sub{color:var(--muted);font-size:14px;margin-top:8px;font-weight:300;letter-spacing:0.04em;}
+
+.level-card{background:linear-gradient(135deg,rgba(226,201,154,0.28),rgba(201,169,110,0.12));border:1px solid rgba(201,169,110,0.35);border-radius:16px;padding:20px 22px;margin:8px 0 22px;}
+.level-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.level-name{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:22px;color:var(--dark);font-weight:400;}
+.level-badge{font-size:12px;color:#fff;background:var(--gold);padding:4px 12px;border-radius:20px;letter-spacing:0.08em;}
+.bar{height:8px;background:rgba(201,169,110,0.2);border-radius:20px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-light),var(--gold));border-radius:20px;transition:width .8s cubic-bezier(.2,.8,.2,1);}
+.bar-text{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px;letter-spacing:0.04em;}
+
+.intro{background:rgba(255,253,250,0.7);border:1px solid rgba(201,169,110,0.25);border-left:3px solid var(--gold);border-radius:10px;padding:16px 18px;margin-bottom:22px;font-size:13.5px;line-height:1.8;color:var(--text);font-weight:300;}
+.intro b{color:var(--gold);font-weight:500;}
+
+.stage-theme{font-size:12px;color:var(--gold);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;}
+.stage-title{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:26px;font-weight:300;color:var(--dark);margin-bottom:24px;}
+
+.q-block{margin-bottom:22px;}
+.q-text{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:18px;font-style:italic;color:var(--dark);line-height:1.55;margin-bottom:10px;}
+.q-num{color:var(--gold);font-style:normal;margin-right:6px;}
+textarea{width:100%;padding:12px 14px;border:1px solid rgba(201,169,110,0.35);background:rgba(255,255,255,0.85);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-size:14px;line-height:1.7;resize:vertical;min-height:82px;outline:none;border-radius:8px;transition:border .3s;}
+textarea:focus{border-color:var(--gold);}
+
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:10px;background:var(--gold);color:#fff;font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-size:14px;font-weight:500;letter-spacing:0.12em;cursor:pointer;transition:all .3s;}
+.btn:hover{background:#b8975d;transform:translateY(-1px);}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+.btn.ghost:hover{background:rgba(201,169,110,0.08);}
+.btn-row{display:flex;gap:12px;margin-top:8px;}
+.btn-row .btn{margin-top:0;}
+
+.insight{background:linear-gradient(135deg,rgba(61,107,58,0.06),rgba(201,169,110,0.08));border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:22px;margin-bottom:20px;animation:rise .6s ease;}
+.insight .tag{font-size:11px;color:var(--gold);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px;}
+.insight .body{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:18px;font-style:italic;line-height:1.7;color:var(--dark);white-space:pre-wrap;}
+@keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+.reward-toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--dark);color:var(--gold-light);padding:12px 24px;border-radius:30px;font-size:14px;letter-spacing:0.06em;opacity:0;transition:all .5s;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.2);}
+.reward-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.finished-card{text-align:center;padding:34px 24px;background:linear-gradient(135deg,rgba(226,201,154,0.3),rgba(201,169,110,0.12));border:1px solid rgba(201,169,110,0.4);border-radius:18px;}
+.finished-card h2{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:32px;font-weight:300;color:var(--dark);margin-bottom:10px;}
+.finished-card p{color:var(--muted);font-size:14px;line-height:1.8;margin-bottom:22px;font-weight:300;}
+
+.report{background:rgba(255,253,250,0.9);border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:26px;margin-top:20px;font-size:14px;line-height:1.9;white-space:pre-wrap;color:var(--text);}
+.report h2,.report h3{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-weight:400;color:var(--gold);margin:6px 0;}
+
+.overlay{position:fixed;inset:0;background:rgba(26,21,16,0.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:40;}
+.overlay.show{display:flex;}
+.sheet{background:var(--cream);border-radius:18px;max-width:560px;width:100%;max-height:86vh;overflow-y:auto;padding:28px;position:relative;}
+.sheet .x{position:absolute;top:16px;right:20px;font-size:24px;color:var(--muted);cursor:pointer;border:none;background:none;}
+
+.loading{text-align:center;padding:60px 0;color:var(--muted);font-size:14px;letter-spacing:0.08em;}
+.spinner{width:28px;height:28px;border:2px solid rgba(201,169,110,0.25);border-top-color:var(--gold);border-radius:50%;margin:0 auto 16px;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.muted{color:var(--muted);font-size:13px;text-align:center;margin-top:14px;font-weight:300;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo" onclick="location.href='/index.html'">LUMIÈRE</div>
+  <a class="back" href="/index.html">← 返回</a>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>30天自我探索</h1>
+    <div class="sub">每一次登录，都是一次与自己的深度对话</div>
+  </div>
+
+  <div id="content">
+    <div class="loading"><div class="spinner"></div>正在为你准备今天的探索…</div>
+  </div>
+</div>
+
+<div class="reward-toast" id="toast"></div>
+
+<div class="overlay" id="reportOverlay">
+  <div class="sheet">
+    <button class="x" onclick="document.getElementById('reportOverlay').classList.remove('show')">×</button>
+    <div id="reportSheetBody"></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = '/api/lumiere';
+const uid = localStorage.getItem('lumiere_user_id');
+let state = null;
+
+if (!uid) { location.href = '/auth.html'; }
+
+const el = id => document.getElementById(id);
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function mdToHtml(s){return esc(s)
+  .replace(/^\s*#{2,3}\s*(.+)$/gm,'<h3 style="font-family:\'Cormorant Garamond\',serif;font-weight:400;color:var(--gold);font-size:19px;margin:18px 0 6px;">$1</h3>')
+  .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');}
+
+async function loadState() {
+  try {
+    const res = await fetch(`${API_BASE}?action=discovery_state&user_id=${uid}`);
+    state = await res.json();
+    render();
+  } catch (e) {
+    el('content').innerHTML = '<div class="loading">加载失败，请刷新重试</div>';
+  }
+}
+
+function render() {
+  if (!state || !state.ok) { el('content').innerHTML = '<div class="loading">加载失败，请刷新重试</div>'; return; }
+  const s = state;
+  const pct = Math.round((s.completedStages / s.totalStages) * 100);
+  const levelCard = `
+    <div class="level-card">
+      <div class="level-row">
+        <div class="level-name">${esc(s.levelName)}</div>
+        <div class="level-badge">Lv.${s.level}</div>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div class="bar-text"><span>已完成 ${s.completedStages} / ${s.totalStages} 关</span><span>${s.nextLevelAt ? '距下一等级还差 ' + (s.nextLevelAt - s.completedStages) + ' 关' : '已达最高等级 ✦'}</span></div>
+    </div>
+    ${s.completedStages > 0 ? `<button class="btn ghost" style="margin-bottom:22px" onclick="openHistory()">📖 我的探索档案（已记录 ${s.completedStages} 天）</button>` : ''}`;
+
+  if (s.finished) {
+    el('content').innerHTML = levelCard + `
+      <div class="finished-card">
+        <h2>你走完了这30天</h2>
+        <p>你已经完成了整段自我探索之旅。<br>是时候回望这一路，看看你为自己描绘出了怎样的画像。</p>
+        <button class="btn" onclick="genFinalReport()" id="finalBtn">生成我的完整报告</button>
+      </div>
+      <div id="reportArea"></div>`;
+    return;
+  }
+
+  const intro = s.completedStages === 0 ? `
+    <div class="intro">
+      我会陪你走过 <b>30 段</b> 自我访谈。我扮演一位存在主义心理咨商师，每一关问你 <b>3 个问题</b>——
+      由浅入深，从日常，到你重复的行为，到你真正在乎的，再到你不敢承认的。
+      我不会安慰你，也不给建议，只是<b>陪你把自己看得更清楚</b>。随时可以停下，下次登录我们继续。
+    </div>` : '';
+
+  const qs = (s.questions || []).map((q, i) => `
+    <div class="q-block">
+      <div class="q-text"><span class="q-num">${i+1}.</span>${esc(q)}</div>
+      <textarea id="ans${i}" placeholder="用心感受，写下你的答案…"></textarea>
+    </div>`).join('');
+
+  const milestone = s.stageReportMilestone ? `<button class="btn ghost" style="margin-top:14px" onclick="genStageReport()">领取第 ${s.stageReportMilestone} 关 · 阶段小洞察</button>` : '';
+
+  el('content').innerHTML = levelCard + intro + `
+    <div id="stageCard">
+      <div class="stage-theme">${esc(s.stageTheme)}</div>
+      <div class="stage-title">第 ${s.currentStage} 关</div>
+      ${qs}
+      <button class="btn" id="submitBtn" onclick="submitStage()">完成这一关</button>
+      ${milestone}
+      <div class="muted">完成后可获得积分，并解锁 AI 为你写下的洞察 ✦</div>
+    </div>
+    <div id="insightArea"></div>`;
+}
+
+async function submitStage() {
+  const qs = state.questions || [];
+  const answers = qs.map((_, i) => el('ans'+i).value.trim());
+  if (answers.every(a => !a)) { alert('至少写下一个答案，再完成这一关吧'); return; }
+
+  const btn = el('submitBtn');
+  btn.disabled = true; btn.textContent = '正在聆听你的回答…';
+
+  try {
+    const res = await fetch(`${API_BASE}?action=discovery_submit`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: uid, stage: state.currentStage, questions: qs, answers, lang: window.LUMI_LANG || 'zh' })
+    });
+    const data = await res.json();
+    if (!data.ok) { alert(data.error || '提交失败'); btn.disabled = false; btn.textContent = '完成这一关'; return; }
+
+    if (data.reward > 0) showToast(`+${data.reward} 积分 ✦ 已完成第 ${state.currentStage} 关`);
+
+    // 收起题目，展示洞察
+    el('stageCard').style.display = 'none';
+    const leveled = data.level > state.level;
+    el('insightArea').innerHTML = `
+      <div class="insight">
+        <div class="tag">咨商师的回响</div>
+        <div class="body">${esc(data.insight) || '你今天愿意坐下来面对自己，这本身就已足够。'}</div>
+      </div>
+      ${leveled ? `<div class="finished-card" style="padding:22px"><h2 style="font-size:24px">恭喜，你晋升为「${esc(data.levelName)}」</h2><p>你对自己的了解，又深了一层。</p></div>` : ''}
+      ${data.stageReportMilestone ? `<button class="btn ghost" onclick="genStageReport()">领取第 ${data.stageReportMilestone} 关 · 阶段小洞察</button>` : ''}
+      <button class="btn" style="margin-top:12px" onclick="loadState()">${data.finished ? '查看我的完整报告 →' : '继续下一关'}</button>
+      <div class="muted">也可以先休息，下次登录我们继续 ✦</div>`;
+    state.level = data.level;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    alert('网络错误，请重试'); btn.disabled = false; btn.textContent = '完成这一关';
+  }
+}
+
+async function genStageReport() {
+  openSheet('<div class="loading"><div class="spinner"></div>正在为你梳理这段旅程…</div>');
+  try {
+    const res = await fetch(`${API_BASE}?action=discovery_stage_report`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: uid, lang: window.LUMI_LANG || 'zh' })
+    });
+    const data = await res.json();
+    openSheet(`<div class="stage-theme">阶段小洞察 · 已完成 ${data.stages} 关</div><div class="report">${mdToHtml(data.report) || '继续走下去，会有更多浮现。'}</div>`);
+  } catch (e) { openSheet('<div class="loading">生成失败，请稍后再试</div>'); }
+}
+
+async function genFinalReport() {
+  const btn = el('finalBtn'); if (btn){ btn.disabled = true; btn.textContent = '正在生成你的画像…（约需20秒）'; }
+  try {
+    const res = await fetch(`${API_BASE}?action=discovery_final_report`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: uid, lang: window.LUMI_LANG || 'zh' })
+    });
+    const data = await res.json();
+    if (!data.ok) { alert(data.error || '生成失败'); if(btn){btn.disabled=false;btn.textContent='生成我的完整报告';} return; }
+    window._report = data.report;
+    el('reportArea').innerHTML = `
+      <div class="report">${mdToHtml(data.report)}</div>
+      <button class="btn" style="margin-top:18px" onclick="downloadReport()">下载报告为图片</button>`;
+    if (btn) btn.style.display = 'none';
+    el('reportArea').scrollIntoView({ behavior: 'smooth' });
+  } catch (e) { alert('网络错误，请重试'); if(btn){btn.disabled=false;btn.textContent='生成我的完整报告';} }
+}
+
+function openSheet(html){ el('reportSheetBody').innerHTML = html; el('reportOverlay').classList.add('show'); }
+function showToast(msg){ const t = el('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200); }
+
+// 报告下载为图片（canvas 文本换行渲染）
+function downloadReport() {
+  const text = (window._report || '').replace(/[#*]/g, '');
+  const W = 1080, pad = 90, lineH = 46, fontSize = 28;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.font = `${fontSize}px 'Noto Serif SC', serif`;
+  // 预排版计算高度
+  const maxW = W - pad * 2;
+  const lines = [];
+  text.split('\n').forEach(para => {
+    if (para.trim() === '') { lines.push(''); return; }
+    let cur = '';
+    for (const ch of para) {
+      if (ctx.measureText(cur + ch).width > maxW) { lines.push(cur); cur = ch; }
+      else cur += ch;
+    }
+    lines.push(cur);
+  });
+  const H = pad * 2 + 140 + lines.length * lineH;
+  canvas.width = W; canvas.height = H;
+  // 背景
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#faf6f0'); g.addColorStop(1, '#ede5dc');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // 标题
+  ctx.fillStyle = '#c9a96e';
+  ctx.font = `300 26px 'Cormorant Garamond', serif`;
+  ctx.fillText('LUMIÈRE', pad, 80);
+  ctx.fillStyle = '#1a1510';
+  ctx.font = `300 52px 'Cormorant Garamond', serif`;
+  ctx.fillText('我的30天自我画像', pad, 140);
+  // 正文
+  ctx.fillStyle = '#2c2218';
+  ctx.font = `${fontSize}px 'Noto Serif SC', serif`;
+  let y = 210;
+  lines.forEach(ln => { ctx.fillText(ln, pad, y); y += lineH; });
+  // 下载
+  const link = document.createElement('a');
+  link.download = `LUMIERE-自我画像-${Date.now()}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// ── 历史档案：回看 / 收藏 / 分享 ──
+async function openHistory() {
+  el('content').innerHTML = '<div class="loading"><div class="spinner"></div>正在翻开你的档案…</div>';
+  try {
+    const res = await fetch(`${API_BASE}?action=discovery_history&user_id=${uid}`);
+    const data = await res.json();
+    window._history = data.items || [];
+    renderHistory();
+  } catch (e) { el('content').innerHTML = '<div class="loading">加载失败，请重试</div>'; }
+}
+
+function renderHistory() {
+  const items = window._history || [];
+  const back = '<button class="btn ghost" style="margin-bottom:16px" onclick="loadState()">← 返回探索</button>';
+  if (!items.length) { el('content').innerHTML = back + '<div class="muted">还没有记录，去完成第一关吧 ✦</div>'; return; }
+  const cards = items.map(it => {
+    const qa = (it.questions || []).map((q, i) =>
+      `<div class="q-text" style="font-size:16px;margin-bottom:4px">${esc(q)}</div>`
+      + `<div style="font-size:14px;color:var(--text);line-height:1.7;margin-bottom:14px;white-space:pre-wrap">${esc((it.answers && it.answers[i]) || '（未答）')}</div>`
+    ).join('');
+    const ins = it.insight ? `<div class="insight" style="margin:6px 0 0"><div class="tag">咨商师的回响</div><div class="body" style="font-size:16px">${esc(it.insight)}</div></div>` : '';
+    return `<div class="report" style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div class="stage-theme" style="margin:0">第 ${it.day} 天 · ${esc(it.theme || '')}</div>
+        <div style="white-space:nowrap">
+          <button onclick="toggleFav(${it.day}, ${it.favorited ? 1 : 0}, this)" style="background:none;border:none;cursor:pointer;font-size:22px;color:${it.favorited ? '#8b4a5a' : '#c9a96e'};vertical-align:middle">${it.favorited ? '♥' : '♡'}</button>
+          <button onclick="shareEntry(${it.day})" style="background:none;border:1px solid var(--gold);color:var(--gold);border-radius:6px;cursor:pointer;font-size:12px;padding:5px 12px;margin-left:6px;font-family:'LXGW WenKai TC','Noto Serif SC',serif">分享</button>
+        </div>
+      </div>
+      ${qa}${ins}
+    </div>`;
+  }).join('');
+  el('content').innerHTML = back + cards;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function toggleFav(day, cur, btn) {
+  const nv = cur ? 0 : 1;
+  try {
+    await fetch(`${API_BASE}?action=discovery_favorite`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: uid, day, favorited: !!nv })
+    });
+    btn.textContent = nv ? '♥' : '♡';
+    btn.style.color = nv ? '#8b4a5a' : '#c9a96e';
+    btn.setAttribute('onclick', `toggleFav(${day}, ${nv}, this)`);
+    const it = (window._history || []).find(x => x.day === day);
+    if (it) it.favorited = !!nv;
+  } catch (e) {}
+}
+
+function shareEntry(day) {
+  const it = (window._history || []).find(x => x.day === day);
+  if (!it) return;
+  let text = '';
+  (it.questions || []).forEach((q, i) => { text += q + '\n' + ((it.answers && it.answers[i]) || '') + '\n\n'; });
+  if (it.insight) text += '— 咨商师的回响 —\n' + it.insight;
+  shareAsImage(`第${it.day}天 · ${it.theme || ''}`, text);
+}
+
+// 通用：把文字渲染成米金色图片卡片并下载
+function shareAsImage(title, text) {
+  text = (text || '').replace(/[#*]/g, '');
+  const W = 1080, pad = 90, lineH = 44, fontSize = 27;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.font = `${fontSize}px 'Noto Serif SC', serif`;
+  const maxW = W - pad * 2;
+  const lines = [];
+  text.split('\n').forEach(para => {
+    if (para.trim() === '') { lines.push(''); return; }
+    let cur = '';
+    for (const ch of para) {
+      if (ctx.measureText(cur + ch).width > maxW) { lines.push(cur); cur = ch; }
+      else cur += ch;
+    }
+    lines.push(cur);
+  });
+  const H = pad * 2 + 150 + lines.length * lineH + 30;
+  canvas.width = W; canvas.height = H;
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#faf6f0'); g.addColorStop(1, '#ede5dc');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#c9a96e'; ctx.font = `300 24px 'Cormorant Garamond', serif`;
+  ctx.fillText('LUMIÈRE · 30天自我探索', pad, 76);
+  ctx.fillStyle = '#1a1510'; ctx.font = `300 40px 'Cormorant Garamond', serif`;
+  ctx.fillText(title, pad, 130);
+  ctx.fillStyle = '#2c2218'; ctx.font = `${fontSize}px 'Noto Serif SC', serif`;
+  let y = 200;
+  lines.forEach(ln => { ctx.fillText(ln, pad, y); y += lineH; });
+  const link = document.createElement('a');
+  link.download = `LUMIERE-${title}-${Date.now()}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+loadState();
+</script>
+<script src="/i18n.js?v=4"></script>
+<script src="/onboard.js?v=1"></script>
+<script>window.Onboard && Onboard.show('days30');</script>
+</body>
+</html>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>爱情显影室 · LUMIÈRE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+SC:wght@300;400;500&family=LXGW+WenKai+TC:wght@300;400&display=swap');
+:root{--cream:#faf6f0;--dark:#1a1510;--gold:#c9a96e;--gold-light:#e2c99a;--red:#8b4a5a;--green:#3d6b3a;--pink:#e8b4c0;--blue:#8ab4c8;--text:#2c2218;--muted:#8a7560;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;min-height:100vh;padding:0 0 70px;}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 20px;max-width:720px;margin:0 auto;}
+.logo{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:20px;letter-spacing:0.22em;color:var(--gold);cursor:pointer;}
+.back{font-size:13px;color:var(--muted);text-decoration:none;letter-spacing:0.05em;}
+.back:hover{color:var(--gold);}
+
+.hero{text-align:center;padding:10px 0 22px;}
+.hero h1{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:clamp(30px,5vw,44px);font-weight:300;letter-spacing:0.06em;color:var(--dark);}
+.hero .sub{color:var(--muted);font-size:13.5px;margin-top:8px;font-weight:300;letter-spacing:0.03em;line-height:1.7;}
+
+/* 顶部理论小注 */
+.creed{background:rgba(255,253,250,0.7);border:1px solid rgba(201,169,110,0.25);border-left:3px solid var(--gold);border-radius:10px;padding:13px 16px;margin-bottom:22px;font-size:12.5px;line-height:1.8;color:var(--muted);font-weight:300;font-style:italic;}
+.creed b{color:var(--gold);font-weight:400;font-style:normal;}
+
+/* tab 切换 */
+.tabs{display:flex;gap:8px;background:rgba(201,169,110,0.1);border-radius:12px;padding:5px;margin-bottom:24px;}
+.tab{flex:1;text-align:center;padding:11px;border-radius:9px;font-size:13.5px;letter-spacing:0.06em;color:var(--muted);cursor:pointer;transition:all .3s;border:none;background:none;font-family:'LXGW WenKai TC','Noto Serif SC',serif;}
+.tab.active{background:#fff;color:var(--dark);box-shadow:0 2px 8px rgba(201,169,110,0.18);}
+
+.view{display:none;animation:rise .5s ease;}
+.view.show{display:block;}
+@keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+/* 记录块 */
+.block{margin-bottom:26px;}
+.block-num{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;color:var(--gold);font-size:15px;margin-right:8px;font-style:italic;}
+.block-label{font-size:15px;color:var(--dark);margin-bottom:12px;display:inline;}
+.block-hint{font-size:12px;color:var(--muted);font-weight:300;margin-top:4px;}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.chip{padding:7px 14px;border:1px solid rgba(201,169,110,0.4);border-radius:20px;font-size:13px;color:var(--text);cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.6);}
+.chip:hover{border-color:var(--gold);}
+.chip.on{background:var(--gold);color:#fff;border-color:var(--gold);}
+
+.slider-wrap{margin-top:14px;}
+input[type=range]{width:100%;accent-color:var(--gold);height:4px;cursor:pointer;}
+.slider-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px;font-weight:300;}
+.slider-val{text-align:center;font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:22px;color:var(--gold);margin-top:2px;}
+
+input[type=text],textarea{width:100%;padding:12px 14px;border:1px solid rgba(201,169,110,0.35);background:rgba(255,255,255,0.85);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-size:14px;line-height:1.7;outline:none;border-radius:8px;transition:border .3s;}
+input[type=text]:focus,textarea:focus{border-color:var(--gold);}
+textarea{resize:vertical;min-height:76px;}
+
+.mirror-q{background:linear-gradient(135deg,rgba(139,74,90,0.06),rgba(201,169,110,0.08));border:1px solid rgba(201,169,110,0.3);border-radius:12px;padding:16px 18px;margin-bottom:12px;}
+.mirror-q .tag{font-size:11px;color:var(--gold);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:8px;}
+.mirror-q .q{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:18px;font-style:italic;line-height:1.55;color:var(--dark);}
+.mirror-q .reroll{font-size:12px;color:var(--muted);cursor:pointer;margin-top:10px;display:inline-block;}
+.mirror-q .reroll:hover{color:var(--gold);}
+
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:10px;background:var(--gold);color:#fff;font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-size:14px;font-weight:500;letter-spacing:0.12em;cursor:pointer;transition:all .3s;}
+.btn:hover{background:#b8975d;transform:translateY(-1px);}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+.btn.ghost:hover{background:rgba(201,169,110,0.08);}
+
+/* AI 即时回应 */
+.reflection{background:linear-gradient(135deg,rgba(61,107,58,0.06),rgba(201,169,110,0.08));border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:22px;margin-top:20px;animation:rise .6s ease;}
+.reflection .tag{font-size:11px;color:var(--gold);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px;}
+.reflection .body{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:19px;font-style:italic;line-height:1.7;color:var(--dark);}
+
+/* 曲线卡 */
+.card{background:rgba(255,253,250,0.9);border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:22px;margin-bottom:20px;}
+.card-title{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:20px;font-weight:400;color:var(--dark);margin-bottom:4px;}
+.card-sub{font-size:12px;color:var(--muted);font-weight:300;margin-bottom:16px;}
+.curve-box{width:100%;overflow-x:auto;}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;}
+.stat{flex:1;min-width:120px;text-align:center;background:rgba(201,169,110,0.08);border-radius:10px;padding:14px;}
+.stat .v{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:26px;color:var(--gold);}
+.stat .l{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* 历史列表 */
+.entry{background:#fff;border:1px solid rgba(201,169,110,0.22);border-radius:12px;padding:16px 18px;margin-bottom:12px;}
+.entry-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.entry-emotion{font-size:13px;color:var(--dark);}
+.entry-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+.entry-date{font-size:12px;color:var(--muted);}
+.entry-event{font-size:13.5px;color:var(--text);line-height:1.7;font-weight:300;}
+.entry-refl{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-style:italic;font-size:14px;color:var(--muted);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(201,169,110,0.3);}
+
+/* 报告 */
+.report{background:rgba(255,253,250,0.95);border:1px solid rgba(201,169,110,0.35);border-radius:14px;padding:26px;margin-top:8px;font-size:14px;line-height:1.95;white-space:pre-wrap;color:var(--text);}
+.report h2{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-weight:400;font-size:20px;color:var(--gold);margin:18px 0 6px;}
+.report h2:first-child{margin-top:0;}
+
+.loading{text-align:center;padding:50px 0;color:var(--muted);font-size:14px;letter-spacing:0.08em;}
+.spinner{width:28px;height:28px;border:2px solid rgba(201,169,110,0.25);border-top-color:var(--gold);border-radius:50%;margin:0 auto 16px;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{text-align:center;color:var(--muted);font-size:13.5px;font-weight:300;padding:44px 20px;line-height:1.8;}
+
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--dark);color:var(--gold-light);padding:12px 24px;border-radius:30px;font-size:13.5px;letter-spacing:0.05em;opacity:0;transition:all .5s;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.2);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:768px){.wrap{padding:0 16px;}}
+
+/* 断联天数卡 */
+.nc-card{background:linear-gradient(135deg,rgba(139,74,90,0.07),rgba(201,169,110,0.09));border:1px solid rgba(201,169,110,0.3);border-radius:16px;padding:20px 22px;margin-bottom:20px;text-align:center;}
+.nc-setup{font-size:13.5px;color:var(--muted);line-height:1.8;}
+.nc-setup .nc-set-btn{display:inline-block;margin-top:12px;padding:9px 20px;border:1px solid var(--gold);border-radius:20px;color:var(--gold);cursor:pointer;font-size:13px;background:rgba(255,255,255,0.5);}
+.nc-setup .nc-set-btn:hover{background:var(--gold);color:#fff;}
+.nc-tag{font-size:11px;letter-spacing:0.16em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+.nc-num{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:52px;line-height:1;color:var(--gold);}
+.nc-num small{font-size:20px;margin-left:4px;}
+.nc-desc{font-size:13.5px;color:var(--text);margin-top:8px;font-weight:300;}
+.nc-best{font-size:12px;color:var(--muted);margin-top:6px;}
+.nc-reset{font-size:12px;color:var(--muted);cursor:pointer;margin-top:12px;display:inline-block;border-bottom:1px dashed rgba(138,117,96,0.4);}
+.nc-reset:hover{color:var(--red);}
+
+/* 深夜急救浮动按钮 */
+.sos-fab{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:60;background:var(--dark);color:var(--gold-light);border:none;border-radius:30px;padding:14px 26px;font-size:14px;font-family:'LXGW WenKai TC','Noto Serif SC',serif;letter-spacing:0.04em;cursor:pointer;box-shadow:0 10px 34px rgba(26,21,16,0.35);transition:all .3s;}
+.sos-fab:hover{transform:translateX(-50%) translateY(-2px);}
+.sos-fab::before{content:'✦ ';color:var(--gold);}
+
+/* 急救弹窗（暖色 · 花路） */
+.sos-ov{position:fixed;inset:0;background:linear-gradient(160deg,#fbf4f1,#f6ece3);display:none;align-items:center;justify-content:center;padding:24px;z-index:9999;overflow:hidden;}
+.sos-ov.show{display:flex;}
+.sos-flowers{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.sos-flowers>div{position:absolute;}
+.sos-box{position:relative;z-index:1;max-width:440px;width:100%;text-align:center;color:var(--text);animation:rise .5s ease;}
+.sos-step{display:none;}
+.sos-step.show{display:block;animation:rise .5s ease;}
+.sos-x{position:fixed;top:20px;right:24px;font-size:26px;color:var(--muted);cursor:pointer;background:none;border:none;z-index:2;}
+.breathe{width:150px;height:150px;border-radius:50%;margin:10px auto 24px;background:radial-gradient(circle,rgba(217,154,166,0.40),rgba(226,201,154,0.14));border:1px solid rgba(217,154,166,0.55);animation:breathe 8s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:15px;color:#b5788a;letter-spacing:0.1em;box-shadow:0 8px 40px rgba(217,154,166,0.25);}
+@keyframes breathe{0%,100%{transform:scale(0.72);}50%{transform:scale(1.05);}}
+#sosCd{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:46px;line-height:1;color:#b5788a;}
+.breathe i{font-style:normal;font-size:15px;color:#c79aa6;margin-left:3px;}
+.breathe-cue{font-size:14px;color:#b5788a;letter-spacing:0.28em;margin:-10px 0 18px;height:20px;transition:opacity .6s;}
+.float-item{position:absolute;bottom:-32px;z-index:0;pointer-events:none;animation:floatUp linear forwards;}
+@keyframes floatUp{0%{transform:translateY(0) translateX(0) rotate(0);opacity:0;}12%{opacity:.85;}88%{opacity:.7;}100%{transform:translateY(-96vh) translateX(24px) rotate(45deg);opacity:0;}}
+.sos-title{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:27px;font-weight:400;margin-bottom:14px;color:var(--dark);}
+.sos-text{font-size:15px;line-height:2;color:var(--muted);font-weight:300;margin-bottom:26px;}
+.sos-q{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-style:italic;font-size:20px;line-height:1.6;color:#8b4a5a;margin-bottom:22px;}
+.sos-ta{width:100%;padding:14px;border:1px solid rgba(201,169,110,0.4);background:rgba(255,255,255,0.78);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-size:14px;line-height:1.8;border-radius:10px;outline:none;resize:vertical;min-height:80px;margin-bottom:20px;}
+.sos-ta::placeholder{color:var(--muted);}
+.sos-btn{display:block;width:100%;padding:15px;border:none;border-radius:10px;background:var(--gold);color:#fff;font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-size:14px;font-weight:500;letter-spacing:0.08em;cursor:pointer;margin-bottom:10px;transition:background .3s;}
+.sos-btn:hover{background:#b8975d;}
+.sos-btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+.sos-btn.ghost:hover{background:rgba(201,169,110,0.1);}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo" onclick="location.href='/dashboard.html'">LUMIÈRE</div>
+  <a class="back" href="/xiuxi.html">← 光之修习</a>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>爱情显影室</h1>
+    <div class="sub">把此刻模糊的情绪丢进来，让时间为你冲洗出一张清晰的自己</div>
+  </div>
+
+  <div class="creed">
+    荣格说，<b>亲密关系是自我的投射</b>。你在他身上追逐、害怕、思念的，往往是你自己内在的某一部分。<br>
+    所以这里记录的从来不是"他做了什么"，而是<b>你自己</b>——你的情绪、你的反应、你的渴望。记得越多，你就越清晰。
+  </div>
+
+  <!-- 断联天数 -->
+  <div class="nc-card" id="ncCard"></div>
+
+  <div class="tabs">
+    <button class="tab active" id="tabRecord" onclick="switchView('record')">记录一次</button>
+    <button class="tab" id="tabMirror" onclick="switchView('mirror')">我的显影</button>
+  </div>
+
+  <!-- ══ 记录视图 ══ -->
+  <div class="view show" id="viewRecord">
+    <div class="block">
+      <span class="block-num">1.</span><span class="block-label">此刻，你是什么感觉？</span>
+      <div class="chips" id="emotionChips"></div>
+    </div>
+
+    <div class="block">
+      <span class="block-num">2.</span><span class="block-label">此刻，你离平静有多近？</span>
+      <div class="slider-wrap">
+        <input type="range" id="calm" min="0" max="10" value="5" oninput="document.getElementById('calmVal').textContent=this.value">
+        <div class="slider-val"><span id="calmVal">5</span> / 10</div>
+        <div class="slider-ends"><span>很痛，几乎撑不住</span><span>很平静，风浪已过</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="block-num">3.</span><span class="block-label">发生了什么？</span>
+      <div class="block-hint">一句话就好，客观地说发生的事。</div>
+      <input type="text" id="event" placeholder="例如：他一整天没有回我消息" style="margin-top:10px;">
+    </div>
+
+    <div class="block">
+      <span class="block-num">4.</span><span class="block-label">你的第一反应是什么？</span>
+      <div class="block-hint">身体的、冲动的那个反应——想联系他？想消失？愤怒？</div>
+      <textarea id="reaction" placeholder="我立刻拿起手机，想问他是不是不在乎我了……" style="margin-top:10px;"></textarea>
+    </div>
+
+    <div class="block">
+      <span class="block-num">5.</span><span class="block-label">照见自己</span>
+      <div class="mirror-q">
+        <div class="tag">镜子提问</div>
+        <div class="q" id="mirrorQ"></div>
+        <span class="reroll" onclick="rerollQuestion()">↻ 换一个问题</span>
+      </div>
+      <textarea id="mirrorAnswer" placeholder="慢慢来，把心里的话写给自己……"></textarea>
+    </div>
+
+    <button class="btn" id="saveBtn" onclick="saveEntry()">显影 ✦</button>
+
+    <div id="reflectionWrap"></div>
+  </div>
+
+  <!-- ══ 显影视图 ══ -->
+  <div class="view" id="viewMirror">
+    <div id="mirrorContent">
+      <div class="loading"><div class="spinner"></div>正在读取你的记录…</div>
+    </div>
+  </div>
+</div>
+
+<!-- 深夜急救浮动按钮 -->
+<button class="sos-fab" id="sosFab" onclick="openSos()">忍不住想联系他？</button>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = '/api/lumiere';
+let currentUser = null;
+let entries = [];
+
+// 情绪标签（分三种调性，仅用于主题/配色；平静度滑块才是曲线数据）
+const EMOTIONS = {
+  low:  ['痛苦','思念','愤怒','焦虑','委屈','空虚','嫉妒','不安'],
+  mid:  ['平静','迷茫','疲惫','释然','麻木'],
+  high: ['清醒','自在','感恩','有力量','期待']
+};
+const TONE_COLOR = { low:'var(--red)', mid:'var(--blue)', high:'var(--green)' };
+function emotionTone(e){
+  if (EMOTIONS.low.includes(e)) return 'low';
+  if (EMOTIONS.high.includes(e)) return 'high';
+  return 'mid';
+}
+
+const MIRROR_QUESTIONS = [
+  '他哪一个举动最刺痛你？这份刺痛，让你想起过去的谁？',
+  '你此刻最怕失去的，是他，还是他让你感觉到的那个自己？',
+  '你希望他为你做的那件事，你能不能先自己为自己做到？',
+  '如果这份感觉会说话，它最想要的到底是什么？',
+  '此刻的你最需要听到哪一句话？那句话，本该由谁对你说？',
+  '你在他身上寻找的，是不是你从未从自己那里得到过的东西？',
+  '如果这件事发生在你最好的朋友身上，你会怎样安慰她？',
+  '这份情绪，你以前在什么时候也曾经历过？那时的你多大？'
+];
+
+let selectedEmotion = '';
+let currentQuestion = '';
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+function init(){
+  const userId = localStorage.getItem('lumiere_user_id');
+  const email = localStorage.getItem('lumiere_email');
+  if (!userId){ window.location.href = '/auth.html'; return; }
+  currentUser = { id: userId, email };
+  renderEmotionChips();
+  rerollQuestion();
+  renderNcCard();
+}
+
+// ══════════ 断联天数 ══════════
+function ncStart(){ return localStorage.getItem('lumiere_nc_start'); }
+function ncDays(){
+  var s = ncStart(); if(!s) return null;
+  var ms = new Date().setHours(0,0,0,0) - new Date(s).setHours(0,0,0,0);
+  return Math.max(0, Math.floor(ms/86400000));
+}
+function ncBest(){ return parseInt(localStorage.getItem('lumiere_nc_best')||'0',10); }
+function renderNcCard(){
+  var box = document.getElementById('ncCard'); if(!box) return;
+  var en = window.LUMI_LANG === 'en';
+  var d = ncDays();
+  if(d === null){
+    box.innerHTML = '<div class="nc-setup">'
+      + (en ? 'Counting the days since you last reached out to him — the hardest, bravest streak of all.'
+            : '记录你「没有主动联系他」的天数——这是最难、也最勇敢的坚持。')
+      + '<br><span class="nc-set-btn" onclick="setNcStart()">'
+      + (en ? 'Start my no-contact count' : '开始记录断联天数') + '</span></div>';
+    return;
+  }
+  var best = Math.max(ncBest(), d);
+  if(best > ncBest()){ try{ localStorage.setItem('lumiere_nc_best', String(best)); }catch(e){} }
+  box.innerHTML = '<div class="nc-tag">'+(en?'No Contact':'断联')+'</div>'
+    + '<div class="nc-num">'+d+'<small>'+(en?(d===1?' day':' days'):' 天')+'</small></div>'
+    + '<div class="nc-desc">'+(en ? ('You haven’t reached out to him for '+d+(d===1?' day':' days')+'.') : ('你已经 '+d+' 天没有主动联系他了。'))+'</div>'
+    + '<div class="nc-best">'+(en?('Longest · '+best+(best===1?' day':' days')):('最长纪录 · '+best+' 天'))+'</div>'
+    + '<span class="nc-reset" onclick="resetNc()">'+(en?'I reached out to him · restart':'我联系了他 · 重新计')+'</span>';
+}
+function setNcStart(){
+  var en = window.LUMI_LANG === 'en';
+  var def = new Date().toISOString().slice(0,10);
+  var input = prompt(en ? 'When did you last contact him? (YYYY-MM-DD, leave blank for today)' : '你最后一次联系他是哪天？（格式 2026-07-01，留空=今天）', def);
+  if(input === null) return;
+  var day = input.trim() || def;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(day)){ toast(en?'Please use YYYY-MM-DD':'请用 2026-07-01 这样的格式'); return; }
+  try{ localStorage.setItem('lumiere_nc_start', day); }catch(e){}
+  renderNcCard();
+  toast(en?'Your no-contact count has begun ✦':'断联计数已开始 ✦');
+}
+function resetNc(){
+  var en = window.LUMI_LANG === 'en';
+  if(!confirm(en ? 'Restart the count from today? (Your longest streak is kept.)' : '从今天重新开始计数？（最长纪录会保留）')) return;
+  var d = ncDays(); if(d!==null){ try{ localStorage.setItem('lumiere_nc_best', String(Math.max(ncBest(), d))); }catch(e){} }
+  try{ localStorage.setItem('lumiere_nc_start', new Date().toISOString().slice(0,10)); }catch(e){}
+  renderNcCard();
+  toast(en?'Restarted from today. Be gentle with yourself. ✦':'从今天重新开始，别对自己太苛刻 ✦');
+}
+
+// ══════════ 深夜急救 ══════════
+var SOS_QS = [
+  ['你现在真正想要的，是他，还是被回应、被在乎的那种感觉？','What you truly want right now — is it him, or the feeling of being answered and cared for?'],
+  ['如果现在发了消息，最好的结果是什么？那个结果，能填满你此刻的空吗？','If you sent that message now, what’s the best outcome? Could it fill the emptiness you feel?'],
+  ['此刻最需要被安慰的那个你，几岁？她真正想听的是哪一句话？','How old is the part of you that needs comfort now? What does she most need to hear?'],
+  ['你想从他那里要回的那份确定，能不能先由你自己给自己？','That certainty you want back from him — could you give it to yourself first?']
+];
+// 花路背景：玫瑰 / 爱心 / 百合，柔色铺满
+function flowerSvg(type, color, size){
+  var P = {
+    rose:'<circle cx="12" cy="12" r="7"/><path d="M12 12 C12 8 16 8 16 12 C16 16 12 16 12 12 C12 8 8 8 8 12 C8 16 12 16 12 12 Z" opacity="0.6"/><circle cx="12" cy="12" r="2"/>',
+    heart:'<path d="M12 20 C6 15 3.5 11 3.5 7.8 C3.5 4.8 6.5 3.4 9 5.6 L12 8.4 L15 5.6 C17.5 3.4 20.5 4.8 20.5 7.8 C20.5 11 18 15 12 20 Z"/>',
+    lily:'<g><ellipse cx="12" cy="7" rx="2.4" ry="5"/><ellipse cx="12" cy="7" rx="2.4" ry="5" transform="rotate(72 12 12)"/><ellipse cx="12" cy="7" rx="2.4" ry="5" transform="rotate(144 12 12)"/><ellipse cx="12" cy="7" rx="2.4" ry="5" transform="rotate(216 12 12)"/><ellipse cx="12" cy="7" rx="2.4" ry="5" transform="rotate(288 12 12)"/><circle cx="12" cy="12" r="1.8" fill="#fff"/></g>'
+  };
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="'+color+'" stroke="none">'+(P[type]||P.rose)+'</svg>';
+}
+function sosFlowers(){
+  var types=['rose','heart','lily'];
+  var colors=['#e0a6b0','#e8b4c0','#d99aa6','#e2c99a','#c9a96e','#b9c9ac'];
+  var html='';
+  for(var i=0;i<30;i++){
+    var t=types[i%3], c=colors[i%colors.length];
+    var top=Math.random()*102-1, left=Math.random()*102-1;
+    var size=16+Math.random()*30, rot=Math.random()*360, op=(0.22+Math.random()*0.4).toFixed(2);
+    html+='<div style="top:'+top.toFixed(1)+'%;left:'+left.toFixed(1)+'%;transform:translate(-50%,-50%) rotate('+rot.toFixed(0)+'deg);opacity:'+op+'">'+flowerSvg(t,c,size.toFixed(0))+'</div>';
+  }
+  return html;
+}
+function openSos(){
+  var en = window.LUMI_LANG === 'en';
+  var q = SOS_QS[Math.floor(Math.random()*SOS_QS.length)];
+  var ov = document.getElementById('sosOv');
+  if(!ov){
+    ov = document.createElement('div'); ov.id='sosOv'; ov.className='sos-ov';
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML =
+    '<div class="sos-flowers">'+sosFlowers()+'</div>'
+    + '<button class="sos-x" onclick="closeSos()">×</button>'
+    + '<div class="sos-box">'
+    + '<div class="sos-step show" id="sosS1">'
+      + '<div class="breathe"><span id="sosCd">60</span><i>'+(en?'s':'秒')+'</i></div>'
+      + '<div class="breathe-cue" id="sosCue">'+(en?'Breathe in…':'吸气…')+'</div>'
+      + '<div class="sos-title">'+(en?'Wait. Breathe first.':'先别急，深呼吸')+'</div>'
+      + '<div class="sos-text">'+(en?'The urge will pass in 60 seconds. You don’t have to do anything yet — just breathe with the circle.':'冲动会在 60 秒内退去。你现在什么都不用做，只要跟着这个圆呼吸。')+'</div>'
+      + '<button class="sos-btn" onclick="sosGo(2)">'+(en?'I’m a little calmer →':'我稍微平静一点了 →')+'</button>'
+    + '</div>'
+    + '<div class="sos-step" id="sosS2">'
+      + '<div class="sos-title">'+(en?'One honest question':'先问自己一句')+'</div>'
+      + '<div class="sos-q">'+(en?q[1]:q[0])+'</div>'
+      + '<textarea class="sos-ta" id="sosTa" placeholder="'+(en?'Say it to yourself, not to him…':'把话说给自己听，而不是发给他……')+'"></textarea>'
+      + '<button class="sos-btn" onclick="sosSave()">'+(en?'Keep it here, not send it to him':'把它留在这里，而不是发给他')+'</button>'
+      + '<button class="sos-btn ghost" onclick="sosGo(3)">'+(en?'Skip':'先不写')+'</button>'
+    + '</div>'
+    + '<div class="sos-step" id="sosS3">'
+      + '<div class="sos-title">'+(en?'You held on.':'你忍住了。')+'</div>'
+      + '<div class="sos-text" id="sosDone"></div>'
+      + '<button class="sos-btn" onclick="closeSos()">'+(en?'I’m okay now ✦':'我好多了 ✦')+'</button>'
+    + '</div>'
+    + '</div>';
+  ov.classList.add('show');
+  startBreath();
+}
+
+// 呼吸倒计时 + 飘浮爱心/星星
+function stopBreath(){ clearInterval(window._sosCd); clearInterval(window._sosCue); clearInterval(window._sosFloat); }
+function startBreath(){
+  stopBreath();
+  var en = window.LUMI_LANG === 'en';
+  var cd = 60, cdEl = document.getElementById('sosCd'), cueEl = document.getElementById('sosCue');
+  window._sosCd = setInterval(function(){
+    cd--; if(cdEl) cdEl.textContent = Math.max(0, cd);
+    if(cd <= 0){
+      clearInterval(window._sosCd); clearInterval(window._sosCue);
+      if(cueEl) cueEl.textContent = en ? 'You did it ✦' : '你做到了 ✦';
+      setTimeout(function(){ var s1=document.getElementById('sosS1'); if(s1 && s1.classList.contains('show')) sosGo(2); }, 1600);
+    }
+  }, 1000);
+  var inhale = true;
+  window._sosCue = setInterval(function(){
+    inhale = !inhale;
+    if(cueEl) cueEl.textContent = inhale ? (en?'Breathe in…':'吸气…') : (en?'Breathe out…':'呼气…');
+  }, 4000);
+  window._sosFloat = setInterval(spawnFloat, 520);
+}
+function floatSvg(kind, color, size){
+  var heart='<path d="M12 20 C6 15 3.5 11 3.5 7.8 C3.5 4.8 6.5 3.4 9 5.6 L12 8.4 L15 5.6 C17.5 3.4 20.5 4.8 20.5 7.8 C20.5 11 18 15 12 20 Z"/>';
+  var star='<path d="M12 3 L13.7 9.5 L21 12 L13.7 14.5 L12 21 L10.3 14.5 L3 12 L10.3 9.5 Z"/>';
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="'+color+'">'+(kind==='heart'?heart:star)+'</svg>';
+}
+function spawnFloat(){
+  var ov = document.getElementById('sosOv'); if(!ov) return;
+  var k = Math.random()<0.55 ? 'heart' : 'star';
+  var colors = ['#e0a6b0','#e8b4c0','#e2c99a','#d99aa6','#d9b3c2'];
+  var c = colors[Math.floor(Math.random()*colors.length)];
+  var size = 12 + Math.random()*16, left = Math.random()*100, dur = 4.5 + Math.random()*3;
+  var el = document.createElement('div'); el.className = 'float-item';
+  el.style.cssText = 'left:'+left.toFixed(1)+'%;animation-duration:'+dur.toFixed(1)+'s;';
+  el.innerHTML = floatSvg(k, c, size.toFixed(0));
+  ov.appendChild(el);
+  setTimeout(function(){ el.remove(); }, dur*1000 + 300);
+}
+
+function sosGo(step){
+  if(step !== 1) stopBreath();
+  ['sosS1','sosS2','sosS3'].forEach(function(id,i){
+    var e=document.getElementById(id); if(e) e.classList.toggle('show', i===step-1);
+  });
+  if(step===3) sosFinish();
+}
+function sosSave(){
+  var ta=document.getElementById('sosTa');
+  var txt = ta ? ta.value.trim() : '';
+  if(txt){
+    // 预填到记录表单的"第一反应"，引导写进显影室
+    switchView('record');
+    var r=document.getElementById('reaction'); if(r){ r.value = txt; }
+    var ev=document.getElementById('event'); var en=window.LUMI_LANG==='en';
+    if(ev && !ev.value){ ev.value = en ? 'A moment I wanted to reach out to him' : '一个忍不住想联系他的时刻'; }
+  }
+  sosGo(3);
+  setTimeout(function(){ closeSos(); if(txt){ window.scrollTo(0,300); toast(window.LUMI_LANG==='en'?'Saved to your entry below — develop it into your record ✦':'已带到下方记录里，把它显影下来吧 ✦'); } }, txt?1200:0);
+}
+function sosFinish(){
+  var en = window.LUMI_LANG === 'en';
+  var d = ncDays();
+  var msg;
+  if(d && d>0){ msg = en ? ('You didn’t break your '+d+'-day no-contact streak. That took real strength.') : ('你没有打破 '+d+' 天的断联纪录。这一下，需要真正的力量。'); }
+  else { msg = en ? 'Not reaching out was the braver choice. Well done.' : '没有联系他，是更勇敢的选择。你做到了。'; }
+  var e=document.getElementById('sosDone'); if(e) e.textContent = msg;
+}
+function closeSos(){ stopBreath(); var ov=document.getElementById('sosOv'); if(ov) ov.classList.remove('show'); }
+// 语言切换时重渲染断联卡（其内容由 JS 按语言生成）
+window.addEventListener('lumi-lang', function(){ renderNcCard(); });
+
+function renderEmotionChips(){
+  const box = document.getElementById('emotionChips');
+  const all = [...EMOTIONS.low, ...EMOTIONS.mid, ...EMOTIONS.high];
+  box.innerHTML = all.map(e => `<span class="chip" data-e="${e}" onclick="pickEmotion('${e}',this)">${e}</span>`).join('');
+}
+function pickEmotion(e, el){
+  selectedEmotion = e;
+  document.querySelectorAll('#emotionChips .chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+function rerollQuestion(){
+  let q;
+  do { q = MIRROR_QUESTIONS[Math.floor(Math.random()*MIRROR_QUESTIONS.length)]; }
+  while (q === currentQuestion && MIRROR_QUESTIONS.length > 1);
+  currentQuestion = q;
+  document.getElementById('mirrorQ').textContent = q;
+}
+
+function switchView(v){
+  const rec = v === 'record';
+  document.getElementById('viewRecord').classList.toggle('show', rec);
+  document.getElementById('viewMirror').classList.toggle('show', !rec);
+  document.getElementById('tabRecord').classList.toggle('active', rec);
+  document.getElementById('tabMirror').classList.toggle('active', !rec);
+  if (!rec) loadMirror();
+}
+
+async function saveEntry(){
+  if (!selectedEmotion){ toast('先选一个此刻的情绪吧'); return; }
+  const btn = document.getElementById('saveBtn');
+  const payload = {
+    user_id: currentUser.id,
+    emotion: selectedEmotion,
+    calm: parseInt(document.getElementById('calm').value, 10),
+    event: document.getElementById('event').value.trim(),
+    reaction: document.getElementById('reaction').value.trim(),
+    mirror_question: currentQuestion,
+    mirror_answer: document.getElementById('mirrorAnswer').value.trim(),
+    lang: window.LUMI_LANG || 'zh'
+  };
+  btn.disabled = true; btn.textContent = '正在显影…';
+  try {
+    const res = await fetch(`${API_BASE}?action=save_shadow_entry`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.ok){
+      showReflection(data.ai_reflection);
+      resetForm();
+      toast('已显影 ✦ 你又多认识了自己一点');
+    } else {
+      toast(data.error || '保存失败，请稍后再试');
+    }
+  } catch(e){
+    toast('网络错误，请稍后再试');
+  } finally {
+    btn.disabled = false; btn.textContent = '显影 ✦';
+  }
+}
+
+function showReflection(text){
+  const wrap = document.getElementById('reflectionWrap');
+  if (!text){ wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `<div class="reflection"><div class="tag">镜子对你说</div><div class="body">${escapeHtml(text)}</div></div>`;
+  wrap.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function resetForm(){
+  selectedEmotion = '';
+  document.querySelectorAll('#emotionChips .chip').forEach(c=>c.classList.remove('on'));
+  document.getElementById('calm').value = 5;
+  document.getElementById('calmVal').textContent = '5';
+  document.getElementById('event').value = '';
+  document.getElementById('reaction').value = '';
+  document.getElementById('mirrorAnswer').value = '';
+  rerollQuestion();
+}
+
+async function loadMirror(){
+  const box = document.getElementById('mirrorContent');
+  box.innerHTML = '<div class="loading"><div class="spinner"></div>正在读取你的记录…</div>';
+  try {
+    const res = await fetch(`${API_BASE}?action=get_shadow_entries&user_id=${currentUser.id}`);
+    const data = await res.json();
+    entries = data.data || [];
+  } catch(e){ entries = []; }
+
+  if (entries.length === 0){
+    box.innerHTML = `<div class="empty">你还没有任何记录。<br>回到「记录一次」，写下此刻的感受——<br>哪怕只是一句话，也是显影的开始。</div>`;
+    return;
+  }
+
+  const first = entries[0].calm, last = entries[entries.length-1].calm;
+  const topEmotions = getTopEmotions();
+
+  box.innerHTML = `
+    <div class="card">
+      <div class="card-title">你的情绪曲线</div>
+      <div class="card-sub">纵轴是「离平静有多近」，越往上，风浪越平息。这就是你的显影之路。</div>
+      <div class="curve-box">${buildCurve(entries)}</div>
+      <div class="stat-row">
+        <div class="stat"><div class="v">${entries.length}</div><div class="l">次显影</div></div>
+        <div class="stat"><div class="v">${first} → ${last}</div><div class="l">平静度变化</div></div>
+        <div class="stat"><div class="v">${topEmotions[0]?.e || '—'}</div><div class="l">最常出现</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">显影报告</div>
+      <div class="card-sub">把散落的记录，冲洗成一面清晰的镜子（需至少 3 次记录）。</div>
+      <div id="reportArea">
+        <button class="btn ${entries.length<3?'':'ghost'}" id="reportBtn" ${entries.length<3?'disabled':''} onclick="genReport()">
+          ${entries.length<3 ? `再记录 ${3-entries.length} 次即可解锁` : '为我显影这段时间 ✦'}
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">记录回廊</div>
+      <div class="card-sub">随时翻看，你会看见那个正在慢慢走出来的自己。</div>
+      <div id="entryList">${entries.slice().reverse().map(renderEntry).join('')}</div>
+    </div>
+  `;
+}
+
+function getTopEmotions(){
+  const m = {};
+  entries.forEach(e=>{ if(e.emotion) m[e.emotion]=(m[e.emotion]||0)+1; });
+  return Object.entries(m).map(([e,n])=>({e,n})).sort((a,b)=>b.n-a.n);
+}
+
+function buildCurve(list){
+  const W = Math.max(320, list.length * 46 + 40), H = 200;
+  const padX = 30, padY = 24;
+  const innerW = W - padX*2, innerH = H - padY*2;
+  const n = list.length;
+  const x = i => n===1 ? W/2 : padX + (innerW * i / (n-1));
+  const y = v => padY + innerH * (1 - v/10);
+
+  // 网格线（0 / 5 / 10）
+  let grid = '';
+  [0,5,10].forEach(v=>{
+    const yy = y(v);
+    grid += `<line x1="${padX}" y1="${yy}" x2="${W-padX}" y2="${yy}" stroke="rgba(201,169,110,0.18)" stroke-width="1"/>`;
+    grid += `<text x="${padX-8}" y="${yy+4}" text-anchor="end" font-size="10" fill="#8a7560">${v}</text>`;
+  });
+
+  const pts = list.map((e,i)=>({x:x(i), y:y(e.calm), e}));
+  const linePath = pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  // 面积渐变填充
+  const areaPath = `${linePath} L${pts[pts.length-1].x.toFixed(1)},${(H-padY).toFixed(1)} L${pts[0].x.toFixed(1)},${(H-padY).toFixed(1)} Z`;
+
+  const toneColorHex = { low:'#8b4a5a', mid:'#8ab4c8', high:'#3d6b3a' };
+  const dots = pts.map(p=>{
+    const c = toneColorHex[emotionTone(p.e.emotion)];
+    return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="${c}" stroke="#fff" stroke-width="1.5"><title>${p.e.emotion} · ${p.e.calm}/10</title></circle>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="min-width:${W}px;">
+    <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(201,169,110,0.30)"/>
+      <stop offset="100%" stop-color="rgba(201,169,110,0.02)"/>
+    </linearGradient></defs>
+    ${grid}
+    <path d="${areaPath}" fill="url(#cg)"/>
+    <path d="${linePath}" fill="none" stroke="#c9a96e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    ${dots}
+  </svg>`;
+}
+
+function renderEntry(e){
+  const tone = emotionTone(e.emotion);
+  const colorHex = { low:'#8b4a5a', mid:'#8ab4c8', high:'#3d6b3a' }[tone];
+  const date = new Date(e.created_at).toLocaleDateString('zh-CN',{month:'long',day:'numeric'});
+  return `<div class="entry">
+    <div class="entry-head">
+      <div class="entry-emotion"><span class="entry-dot" style="background:${colorHex}"></span>${escapeHtml(e.emotion||'')} · 平静 ${e.calm}/10</div>
+      <div class="entry-date">${date}</div>
+    </div>
+    ${e.event ? `<div class="entry-event">${escapeHtml(e.event)}</div>` : ''}
+    ${e.ai_reflection ? `<div class="entry-refl">「${escapeHtml(e.ai_reflection)}」</div>` : ''}
+  </div>`;
+}
+
+async function genReport(){
+  const area = document.getElementById('reportArea');
+  area.innerHTML = '<div class="loading"><div class="spinner"></div>正在为你显影……这需要一点时间</div>';
+  try {
+    const res = await fetch(`${API_BASE}?action=generate_shadow_report`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ user_id: currentUser.id, lang: window.LUMI_LANG || 'zh' })
+    });
+    const data = await res.json();
+    if (data.ok){
+      area.innerHTML = `<div class="report">${mdToHtml(data.report)}</div>`;
+    } else {
+      area.innerHTML = `<div class="empty">${escapeHtml(data.error||'生成失败')}</div>
+        <button class="btn ghost" onclick="genReport()">再试一次</button>`;
+    }
+  } catch(e){
+    area.innerHTML = `<div class="empty">网络错误，请稍后再试</div>
+      <button class="btn ghost" onclick="genReport()">再试一次</button>`;
+  }
+}
+
+// ── 工具 ──
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function mdToHtml(md){
+  return escapeHtml(md)
+    .replace(/^##\s+(.+)$/gm, '<h2>$1</h2>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+init();
+</script>
+<script src="/i18n.js?v=4"></script>
+<script src="/onboard.js?v=1"></script>
+<script>window.Onboard && Onboard.show('xianying');</script>
+</body>
+</html>
