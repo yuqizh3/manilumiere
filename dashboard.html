@@ -135,6 +135,7 @@ body{background:var(--cream);color:var(--text);font-family:'LXGW WenKai TC','Not
       <span>欢迎，</span>
       <span class="user-name" id="userNameDisplay">用户</span>
     </div>
+    <a id="adminLink" href="/admin.html" style="display:none;padding:6px 12px;border:1px solid var(--gold);background:var(--gold);color:#fff;text-decoration:none;font-size:12px;border-radius:6px;white-space:nowrap;flex:none;">数据后台</a>
     <button class="logout-btn" onclick="logout()">登出</button>
   </div>
 </div>
@@ -410,6 +411,12 @@ async function init() {
   }
 
   currentUser = { id: userId, email };
+
+  // 管理员：显示数据后台入口
+  if ((email || '').toLowerCase() === 'zhangyuqi2017er@gmail.com') {
+    const al = document.getElementById('adminLink');
+    if (al) al.style.display = 'inline-block';
+  }
 
   // 显示用户名
   const displayName = email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1);
