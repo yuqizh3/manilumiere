@@ -122,6 +122,34 @@ CREATE TABLE journal_entries (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
+-- 创建 shadow_entries 表 (爱情显影室)
+CREATE TABLE shadow_entries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  emotion VARCHAR(50),              -- 情绪标签
+  calm INT CHECK (calm BETWEEN 0 AND 10),  -- 此刻状态：0很痛 ↔ 10很平静（情绪曲线数据源）
+  event TEXT,                       -- 触发事件（一句话）
+  reaction TEXT,                    -- 我的第一反应
+  mirror_question TEXT,             -- 展示的镜子提问
+  mirror_answer TEXT,               -- 用户对镜子提问的回答
+  ai_reflection TEXT,               -- AI 即时回应（照见）
+  created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_shadow_entries_user_id ON shadow_entries(user_id);
+
+-- 埋点事件表（数据后台：浏览/点击/停留）
+CREATE TABLE events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID,                 -- 可空（匿名访客也记）
+  type VARCHAR(20) NOT NULL,    -- page_view / click / dwell
+  page VARCHAR(40),             -- 页面/应用标识
+  label VARCHAR(60),            -- 点击的元素文字
+  value INT,                    -- dwell 停留秒数
+  created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_events_type ON events(type);
+CREATE INDEX idx_events_created ON events(created_at);
+
 -- 创建索引以提升查询性能
 CREATE INDEX idx_check_ins_user_id ON check_ins(user_id);
 CREATE INDEX idx_check_ins_date ON check_ins(checked_at);

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据后台 · LUMIÈRE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Noto+Serif+SC:wght@300;400&family=LXGW+WenKai+TC:wght@300;400&display=swap');
+:root{--cream:#faf6f0;--dark:#1a1510;--gold:#c9a96e;--gold-light:#e2c99a;--red:#8b4a5a;--green:#3d6b3a;--text:#2c2218;--muted:#8a7560;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;min-height:100vh;padding:0 0 60px;-webkit-font-smoothing:antialiased;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;max-width:1080px;margin:0 auto;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:0.22em;color:var(--gold);}
+.logo small{font-family:'LXGW WenKai TC',serif;font-size:13px;letter-spacing:0.1em;color:var(--muted);margin-left:10px;}
+.refresh{padding:7px 16px;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:20px;cursor:pointer;font-size:13px;font-family:inherit;}
+.refresh:hover{background:rgba(201,169,110,0.1);}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+.deny{text-align:center;padding:100px 20px;color:var(--muted);}
+.deny h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:30px;color:var(--dark);margin-bottom:12px;}
+.deny a{color:var(--gold);}
+
+.hero{padding:8px 0 26px;}
+.hero h1{font-family:'Cormorant Garamond','LXGW WenKai TC',serif;font-size:34px;font-weight:300;color:var(--dark);}
+.hero .sub{color:var(--muted);font-size:13px;margin-top:4px;}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:34px;}
+.stat{background:rgba(255,253,250,0.9);border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:20px 22px;}
+.stat .lbl{font-size:12px;color:var(--muted);letter-spacing:0.06em;margin-bottom:8px;}
+.stat .num{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--gold);line-height:1;}
+.stat .foot{font-size:11px;color:var(--muted);margin-top:6px;}
+
+.panel{background:rgba(255,253,250,0.9);border:1px solid rgba(201,169,110,0.3);border-radius:14px;padding:22px 24px;margin-bottom:22px;}
+.panel h3{font-family:'Cormorant Garamond','LXGW WenKai TC',serif;font-size:20px;font-weight:400;color:var(--dark);margin-bottom:18px;letter-spacing:0.02em;}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.bar-name{width:130px;flex:none;font-size:13px;color:var(--text);}
+.bar-track{flex:1;height:22px;background:rgba(201,169,110,0.12);border-radius:6px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-light),var(--gold));border-radius:6px;transition:width .6s ease;}
+.bar-val{width:70px;flex:none;text-align:right;font-size:13px;color:var(--muted);}
+.empty{color:var(--muted);font-size:13px;text-align:center;padding:20px;}
+.utable{max-height:420px;overflow-y:auto;}
+.urow{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid rgba(201,169,110,0.14);font-size:13.5px;}
+.urow.uhead{color:var(--muted);font-size:12px;letter-spacing:0.06em;border-bottom:1px solid rgba(201,169,110,0.3);position:sticky;top:0;background:rgba(255,253,250,0.96);}
+.uidx{width:36px;flex:none;color:var(--muted);}
+.umail{flex:1;color:var(--text);word-break:break-all;}
+.udate{width:135px;flex:none;text-align:right;color:var(--muted);font-size:12.5px;}
+@media(max-width:640px){.udate{width:96px;font-size:11px;}}
+
+.trend{width:100%;overflow-x:auto;}
+.loading{text-align:center;padding:80px 0;color:var(--muted);}
+.spinner{width:28px;height:28px;border:2px solid rgba(201,169,110,0.25);border-top-color:var(--gold);border-radius:50%;margin:0 auto 14px;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@media(max-width:640px){.bar-name{width:96px;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">LUMIÈRE <small>数据后台</small></div>
+  <button class="refresh" onclick="load()">刷新</button>
+</div>
+
+<div class="wrap" id="root">
+  <div class="loading"><div class="spinner"></div>正在加载数据…</div>
+</div>
+
+<script>
+const API = '/api/lumiere';
+const PAGES = {
+  index:'首页 · 每日显化', xiuxi:'光之修习', xianying:'爱情显影室',
+  dashboard:'个人中心', discovery:'30天探索', auth:'登录 / 注册', admin:'数据后台'
+};
+function pn(k){ return PAGES[k] || k; }
+function fmtDwell(s){ s=Math.round(s||0); if(s>=60){ return Math.floor(s/60)+'分'+(s%60)+'秒'; } return s+'秒'; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+async function load(){
+  const root = document.getElementById('root');
+  root.innerHTML = '<div class="loading"><div class="spinner"></div>正在加载数据…</div>';
+  const uid = localStorage.getItem('lumiere_user_id');
+  if(!uid){ return denied('请先登录管理员账号'); }
+  try{
+    const res = await fetch(`${API}?action=admin_stats&user_id=${encodeURIComponent(uid)}`);
+    if(res.status === 403){ return denied('此账号无权限访问后台'); }
+    const d = await res.json();
+    if(!d.ok){ return denied('加载失败：' + (d.error||'')); }
+    render(d);
+  }catch(e){ denied('网络错误，请稍后再试'); }
+}
+
+function denied(msg){
+  document.getElementById('root').innerHTML =
+    '<div class="deny"><h2>无法访问</h2><p>'+esc(msg)+'</p>'
+    + '<p style="margin-top:16px"><a href="/auth.html">用管理员账号登录 →</a></p></div>';
+}
+
+function barList(map, fmt){
+  const entries = Object.entries(map||{}).sort((a,b)=>b[1]-a[1]);
+  if(!entries.length) return '<div class="empty">暂无数据</div>';
+  const max = Math.max.apply(null, entries.map(e=>e[1]));
+  return entries.map(([k,v])=>{
+    const w = max>0 ? Math.max(4, Math.round(v/max*100)) : 0;
+    return '<div class="bar-row"><div class="bar-name">'+esc(pn(k))+'</div>'
+      + '<div class="bar-track"><div class="bar-fill" style="width:'+w+'%"></div></div>'
+      + '<div class="bar-val">'+(fmt?fmt(v):v)+'</div></div>';
+  }).join('');
+}
+
+function trendChart(trend){
+  if(!trend || !trend.length) return '<div class="empty">暂无数据</div>';
+  const W = Math.max(640, trend.length*44), H = 180, padB=28, padT=14, padL=8;
+  const max = Math.max(1, ...trend.map(t=>t.views));
+  const bw = (W - padL*2) / trend.length;
+  let bars='', labels='';
+  trend.forEach((t,i)=>{
+    const h = Math.round((t.views/max)*(H-padT-padB));
+    const x = padL + i*bw + bw*0.18;
+    const y = H-padB-h;
+    bars += '<rect x="'+x.toFixed(1)+'" y="'+y+'" width="'+(bw*0.64).toFixed(1)+'" height="'+Math.max(0,h)+'" rx="3" fill="#c9a96e" opacity="0.85"><title>'+t.date+'：'+t.views+'</title></rect>';
+    if(t.views>0) bars += '<text x="'+(x+bw*0.32).toFixed(1)+'" y="'+(y-4)+'" text-anchor="middle" font-size="10" fill="#8a7560">'+t.views+'</text>';
+    labels += '<text x="'+(x+bw*0.32).toFixed(1)+'" y="'+(H-10)+'" text-anchor="middle" font-size="9" fill="#a89a86">'+t.date.slice(5)+'</text>';
+  });
+  return '<div class="trend"><svg width="100%" height="'+H+'" viewBox="0 0 '+W+' '+H+'" style="min-width:'+W+'px">'+bars+labels+'</svg></div>';
+}
+
+function render(d){
+  const root = document.getElementById('root');
+  root.innerHTML =
+    '<div class="hero"><h1>数据总览</h1><div class="sub">基于最近 '+(d.sampleSize||0)+' 条埋点事件 · 实时</div></div>'
+    + '<div class="cards">'
+      + card('总浏览量', d.totalPageViews, 'Page Views')
+      + card('注册用户', d.totalUsers, 'Users')
+      + card('签到量', d.totalCheckins, 'Check-ins')
+      + card('总点击量', d.totalClicks, 'Clicks')
+      + card('平均停留', fmtDwell(d.avgDwell), 'Avg Dwell')
+      + card('显化次数', d.totalManifest, 'Manifestations')
+    + '</div>'
+    + '<div class="panel"><h3>近 14 天浏览趋势</h3>'+trendChart(d.trend)+'</div>'
+    + '<div class="panel"><h3>各应用 · 浏览量</h3>'+barList(d.viewsByPage)+'</div>'
+    + '<div class="panel"><h3>各应用 · 点击量</h3>'+barList(d.clicksByPage)+'</div>'
+    + '<div class="panel"><h3>各应用 · 平均停留</h3>'+barList(d.dwellAvgByPage, fmtDwell)+'</div>'
+    + '<div class="panel"><h3>注册用户 <span style="font-size:13px;color:var(--muted);font-weight:300">共 '+(d.totalUsers||0)+' 位</span></h3>'+userTable(d.recentUsers)+'</div>';
+}
+function fmtDate(s){
+  if(!s) return '—';
+  var d=new Date(s); if(isNaN(d)) return String(s).slice(0,16);
+  var p=n=>('0'+n).slice(-2);
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function userTable(list){
+  if(!list || !list.length) return '<div class="empty">暂无注册用户</div>';
+  var rows = list.map(function(u,i){
+    return '<div class="urow"><div class="uidx">'+(i+1)+'</div>'
+      + '<div class="umail">'+esc(u.email||'—')+'</div>'
+      + '<div class="udate">'+fmtDate(u.created_at)+'</div></div>';
+  }).join('');
+  return '<div class="utable"><div class="urow uhead"><div class="uidx">#</div><div class="umail">邮箱</div><div class="udate">注册时间</div></div>'+rows+'</div>';
+}
+function card(lbl, num, foot){
+  return '<div class="stat"><div class="lbl">'+lbl+'</div><div class="num">'+(num==null?'—':num)+'</div><div class="foot">'+foot+'</div></div>';
+}
+
+load();
+</script>
+</body>
+</html>
