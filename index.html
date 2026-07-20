@@ -12,7 +12,8 @@
 body{background:var(--cream);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-weight:400;line-height:1.9;letter-spacing:0.02em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;min-height:100vh;overflow-x:hidden;}
 nav{position:fixed;top:0;width:100%;z-index:200;background:rgba(250,246,240,0.93);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,169,110,0.25);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;}
 .nav-logo{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:20px;letter-spacing:0.22em;color:var(--gold);}
-.nav-tabs{display:flex;overflow-x:auto;}
+.nav-tabs{display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.nav-tabs::-webkit-scrollbar{display:none;}
 .nav-tab{padding:0 14px;height:60px;display:flex;align-items:center;font-size:13.5px;letter-spacing:0.06em;color:var(--text);cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;font-family:'LXGW WenKai TC','Noto Serif SC',serif;transition:all .3s;white-space:nowrap;}
 .nav-tab:hover{color:var(--gold);}
 .nav-tab.active{color:var(--dark);border-bottom-color:var(--gold);}
@@ -159,8 +160,10 @@ nav{position:fixed;top:0;width:100%;z-index:200;background:rgba(250,246,240,0.93
 .step h3{font-size:14px;letter-spacing:.12em;color:var(--dark);margin-bottom:7px;}
 .step p{font-size:13px;line-height:1.95;color:var(--muted);}
 @media(max-width:700px){
-  nav{padding:0 12px;}
-  .nav-tab{padding:0 9px;font-size:12px;}
+  nav{padding:0 10px;}
+  .nav-logo{font-size:15px;letter-spacing:0.08em;flex:none;margin-right:4px;}
+  .nav-tabs{flex:1;}
+  .nav-tab{padding:0 10px;font-size:12.5px;}
   .section{padding:24px 16px;}
   .aff-card{padding:32px 20px;}
   .journey-wrap,.god-wrap,.ak-wrap,.custom-wrap{padding:40px 16px 80px;}
@@ -985,7 +988,7 @@ function go(id,idx){
   var page=document.getElementById('page-'+id);
   if(page)page.classList.add('active');
   var tabs=document.querySelectorAll('.nav-tab');
-  if(tabs[idx])tabs[idx].classList.add('active');
+  if(tabs[idx]){ tabs[idx].classList.add('active'); try{ tabs[idx].scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'}); }catch(e){} }
   if(id==='journey')drawGarden();
   if(id==='akashic')drawAkashicCanvas();
   // 新手引导：进入板块首次弹说明卡

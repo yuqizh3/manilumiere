@@ -118,7 +118,12 @@ body{background:var(--cream);color:var(--text);font-family:'LXGW WenKai TC','Not
 
 /* ── 响应式 ── */
 @media(max-width:768px){
-  .header{padding:0 16px;}
+  .header{padding:0 14px;}
+  .header-right{gap:8px;}
+  .user-info{display:none;}          /* 手机上隐藏欢迎语，腾出空间 */
+  .logo{font-size:17px;letter-spacing:0.12em;}
+  .logout-btn{padding:5px 10px;font-size:11px;}
+  #adminLink{padding:5px 10px!important;font-size:11px!important;}
   .main{padding:80px 16px 60px;}
   .metrics-grid{grid-template-columns:1fr;}
   .quick-actions{grid-template-columns:repeat(2,1fr);}
