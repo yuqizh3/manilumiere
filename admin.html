@@ -105,18 +105,21 @@ function barList(map, fmt){
   }).join('');
 }
 
-function trendChart(trend){
+function trendChart(trend, key, color){
+  key = key || 'views'; color = color || '#c9a96e';
   if(!trend || !trend.length) return '<div class="empty">暂无数据</div>';
   const W = Math.max(640, trend.length*44), H = 180, padB=28, padT=14, padL=8;
-  const max = Math.max(1, ...trend.map(t=>t.views));
+  const val = t => (t[key]||0);
+  const max = Math.max(1, ...trend.map(val));
   const bw = (W - padL*2) / trend.length;
   let bars='', labels='';
   trend.forEach((t,i)=>{
-    const h = Math.round((t.views/max)*(H-padT-padB));
+    const v = val(t);
+    const h = Math.round((v/max)*(H-padT-padB));
     const x = padL + i*bw + bw*0.18;
     const y = H-padB-h;
-    bars += '<rect x="'+x.toFixed(1)+'" y="'+y+'" width="'+(bw*0.64).toFixed(1)+'" height="'+Math.max(0,h)+'" rx="3" fill="#c9a96e" opacity="0.85"><title>'+t.date+'：'+t.views+'</title></rect>';
-    if(t.views>0) bars += '<text x="'+(x+bw*0.32).toFixed(1)+'" y="'+(y-4)+'" text-anchor="middle" font-size="10" fill="#8a7560">'+t.views+'</text>';
+    bars += '<rect x="'+x.toFixed(1)+'" y="'+y+'" width="'+(bw*0.64).toFixed(1)+'" height="'+Math.max(0,h)+'" rx="3" fill="'+color+'" opacity="0.85"><title>'+t.date+'：'+v+'</title></rect>';
+    if(v>0) bars += '<text x="'+(x+bw*0.32).toFixed(1)+'" y="'+(y-4)+'" text-anchor="middle" font-size="10" fill="#8a7560">'+v+'</text>';
     labels += '<text x="'+(x+bw*0.32).toFixed(1)+'" y="'+(H-10)+'" text-anchor="middle" font-size="9" fill="#a89a86">'+t.date.slice(5)+'</text>';
   });
   return '<div class="trend"><svg width="100%" height="'+H+'" viewBox="0 0 '+W+' '+H+'" style="min-width:'+W+'px">'+bars+labels+'</svg></div>';
@@ -134,7 +137,9 @@ function render(d){
       + card('平均停留', fmtDwell(d.avgDwell), 'Avg Dwell')
       + card('显化次数', d.totalManifest, 'Manifestations')
     + '</div>'
-    + '<div class="panel"><h3>近 14 天浏览趋势</h3>'+trendChart(d.trend)+'</div>'
+    + '<div class="panel"><h3>近 30 天 · 注册趋势 <span style="font-size:12px;color:var(--muted);font-weight:300">含历史</span></h3>'+trendChart(d.regTrend,'count','#c9a96e')+'</div>'
+    + '<div class="panel"><h3>近 30 天 · 签到趋势 <span style="font-size:12px;color:var(--muted);font-weight:300">含历史</span></h3>'+trendChart(d.checkinTrend,'count','#b48aa0')+'</div>'
+    + '<div class="panel"><h3>近 14 天浏览趋势 <span style="font-size:12px;color:var(--muted);font-weight:300">埋点上线后</span></h3>'+trendChart(d.trend,'views','#c9a96e')+'</div>'
     + '<div class="panel"><h3>各应用 · 浏览量</h3>'+barList(d.viewsByPage)+'</div>'
     + '<div class="panel"><h3>各应用 · 点击量</h3>'+barList(d.clicksByPage)+'</div>'
     + '<div class="panel"><h3>各应用 · 平均停留</h3>'+barList(d.dwellAvgByPage, fmtDwell)+'</div>'

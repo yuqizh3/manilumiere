@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>许愿转念 · LUMIÈRE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+SC:wght@300;400&family=LXGW+WenKai+TC:wght@300;400&display=swap');
+:root{--gold:#c9a96e;--gold-light:#e2c99a;--text:#3a4a2a;--muted:#7d8a63;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:linear-gradient(180deg,#f0f7dd 0%,#e6f1c9 60%,#dcedbb 100%);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;min-height:100vh;padding:0 0 60px;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;}
+#garden{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+#garden>div{position:absolute;}
+.topbar,.wrap{position:relative;z-index:1;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;max-width:600px;margin:0 auto;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:0.22em;color:#8a9a5c;cursor:pointer;}
+.back{font-size:13px;color:var(--muted);text-decoration:none;letter-spacing:0.05em;}
+.back:hover{color:#6b7a48;}
+.wrap{max-width:560px;margin:0 auto;padding:0 22px;text-align:center;}
+
+.hero{padding:8px 0 6px;}
+.hero h1{font-family:'Cormorant Garamond','LXGW WenKai TC',serif;font-size:clamp(28px,6vw,40px);font-weight:400;color:#43512c;letter-spacing:0.04em;}
+.hero .sub{color:var(--muted);font-size:13.5px;margin-top:8px;font-weight:300;line-height:1.8;}
+
+/* 选蜡烛 */
+.picker{margin-top:26px;}
+.pick-label{font-size:15px;color:#43512c;margin-bottom:18px;}
+.pick-grid{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+.pick{width:150px;background:rgba(255,255,255,0.7);border:1px solid rgba(160,180,110,0.4);border-radius:16px;padding:16px 12px;cursor:pointer;transition:all .25s;}
+.pick:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(140,160,90,0.22);border-color:#a9c07a;}
+.pick svg{display:block;margin:0 auto 8px;}
+.pick .nm{font-size:15px;color:#43512c;margin-bottom:3px;}
+.pick .mn{font-size:11.5px;color:var(--muted);line-height:1.5;}
+
+/* 点亮的舞台 */
+.stage{display:none;flex-direction:column;align-items:center;margin-top:20px;animation:rise .6s ease;}
+.stage.show{display:flex;}
+.candle-wrap{position:relative;width:150px;height:170px;margin:6px auto 4px;}
+.halo{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,140,0.55),transparent 62%);animation:halo 4s ease-in-out infinite;}
+.body{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:130px;height:130px;filter:drop-shadow(0 6px 12px rgba(120,140,70,0.25));}
+.flame{position:absolute;left:50%;width:20px;height:40px;transform:translateX(-50%);border-radius:50% 50% 50% 50%/62% 62% 40% 40%;background:linear-gradient(to top,#ffcf6e,#ff9d3c 55%,#ff7040);box-shadow:0 -4px 24px 3px rgba(255,150,70,0.7);transform-origin:50% 100%;animation:flicker 1.4s ease-in-out infinite alternate;}
+.flame::before{content:'';position:absolute;inset:4px 4px 7px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:linear-gradient(to top,#fff4cf,#ffd27a);}
+@keyframes flicker{0%{transform:translateX(-50%) scale(1) rotate(-2.5deg);}100%{transform:translateX(-50%) scale(1.07) rotate(2.5deg);}}
+@keyframes halo{0%,100%{opacity:.7;}50%{opacity:1;}}
+
+/* 许愿 */
+.wishbox{display:none;width:100%;margin-top:12px;animation:rise .5s ease;}
+.wishbox.show{display:block;}
+.wish-label{font-size:15px;color:#43512c;margin-bottom:14px;}
+.chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:14px;}
+.chip{padding:9px 15px;border:1px solid rgba(160,180,110,0.5);border-radius:22px;font-size:13.5px;color:#43512c;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.6);}
+.chip:hover{border-color:#a9c07a;}
+.chip.on{background:#a9c07a;color:#fff;border-color:#a9c07a;}
+textarea{width:100%;padding:13px;border:1px solid rgba(160,180,110,0.5);background:rgba(255,255,255,0.75);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-size:14.5px;line-height:1.9;outline:none;border-radius:12px;resize:vertical;min-height:64px;margin-bottom:14px;}
+textarea::placeholder{color:#a3b083;}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;background:linear-gradient(135deg,#b6cc82,#93b25f);color:#fff;font-family:'LXGW WenKai TC','Noto Serif SC',serif;font-size:15px;font-weight:500;letter-spacing:0.1em;cursor:pointer;transition:all .3s;box-shadow:0 8px 24px rgba(140,170,80,0.28);}
+.btn:hover{transform:translateY(-1px);}
+.btn.soft{background:transparent;border:1px solid #a9c07a;color:#6b7a48;box-shadow:none;margin-top:10px;font-weight:400;}
+
+/* 亮着 */
+.lit-txt{display:none;animation:rise .7s ease;}
+.lit-txt.show{display:block;}
+.lit-wish{font-family:'Cormorant Garamond','LXGW WenKai TC',serif;font-style:italic;font-size:21px;line-height:1.7;color:#43512c;margin:10px 0 12px;}
+.lit-msg{font-size:14px;line-height:2;color:var(--muted);font-weight:300;}
+.lit-since{font-size:12.5px;color:#8a9a5c;letter-spacing:0.04em;margin:8px 0 22px;}
+.count{font-size:12px;color:var(--muted);margin-top:12px;}
+
+@keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+.why{position:relative;z-index:1;max-width:560px;margin:34px auto 0;padding:18px 22px 0;border-top:1px solid rgba(160,180,110,0.35);}
+.why-t{font-size:13px;color:#8a9a5c;cursor:pointer;}
+.why-b{display:none;margin-top:12px;font-size:13px;line-height:1.95;color:var(--muted);font-weight:300;}
+.why-b.show{display:block;animation:rise .4s ease;}
+.why-b b{color:#43512c;font-weight:500;}
+
+/* 转念 overlay */
+.rf-ov{position:fixed;inset:0;background:linear-gradient(180deg,#fbf7ec,#ecf3da);display:none;align-items:flex-start;justify-content:center;padding:60px 22px 40px;z-index:9999;overflow-y:auto;}
+.rf-ov.show{display:flex;}
+.rf-x{position:fixed;top:18px;right:22px;font-size:26px;color:#8a9a5c;background:none;border:none;cursor:pointer;z-index:2;}
+.rf-box{max-width:460px;width:100%;text-align:center;}
+.rf-step{display:none;} .rf-step.show{display:block;animation:rise .5s ease;}
+.rf-tag{font-size:11px;letter-spacing:0.16em;color:#b5972f;text-transform:uppercase;margin-bottom:10px;}
+.rf-title{font-family:'Cormorant Garamond','LXGW WenKai TC',serif;font-size:23px;font-weight:400;color:#43512c;line-height:1.5;margin-bottom:10px;}
+.rf-line{font-size:14.5px;line-height:1.95;color:#7d8a63;margin-bottom:20px;font-weight:300;}
+.rf-chip{display:block;width:100%;text-align:left;padding:14px 16px;border:1px solid rgba(160,180,110,0.5);border-radius:12px;background:rgba(255,255,255,0.72);margin-bottom:10px;cursor:pointer;font-size:14.5px;line-height:1.6;color:#43512c;transition:all .2s;}
+.rf-chip:hover{border-color:#a9c07a;background:#fff;transform:translateY(-1px);}
+</style>
+</head>
+<body>
+<div id="garden"></div>
+
+<div class="topbar">
+  <div class="logo" onclick="location.href='/jijiu.html'">LUMIÈRE</div>
+  <a class="back" href="/jijiu.html" id="backLink">← 情绪急救室</a>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <h1 id="hTitle">许愿转念</h1>
+    <div class="sub" id="hSub">在这片花园里，为自己点一支蜡烛，把念头，轻轻转向希望。</div>
+  </div>
+
+  <!-- 选蜡烛 -->
+  <div class="picker" id="picker">
+    <div class="pick-label" id="pickLabel">选一支属于你的蜡烛——</div>
+    <div class="pick-grid" id="pickGrid"></div>
+  </div>
+
+  <!-- 点亮 + 许愿 -->
+  <div class="stage" id="stage">
+    <div class="candle-wrap" id="candleWrap">
+      <div class="halo"></div>
+      <div class="body" id="candleBody"></div>
+      <div class="flame" id="flame"></div>
+    </div>
+
+    <div class="wishbox" id="wishbox">
+      <div class="wish-label" id="wishLabel">许一个愿——</div>
+      <div class="chips" id="wishChips"></div>
+      <textarea id="wishText" placeholder="也可以写下自己的话……"></textarea>
+      <button class="btn" onclick="makeWish()" id="wishBtn">许下心愿 ✦</button>
+      <button class="btn soft" onclick="backToPick()" id="rechooseBtn">换一支蜡烛</button>
+    </div>
+
+    <div class="lit-txt" id="litTxt">
+      <div class="lit-wish" id="litWish"></div>
+      <div class="lit-msg" id="litMsg">你的蜡烛，正在为你亮着。<br>愿它陪你，一天天，慢慢变好。</div>
+      <div class="lit-since" id="litSince"></div>
+      <button class="btn" onclick="openReframe()" id="reframeBtn">还有念头在扎你？转念一下 →</button>
+      <button class="btn soft" onclick="newWish()" id="newBtn">换一个心愿</button>
+      <button class="btn soft" onclick="backToPick()" id="rechooseBtn2">换一支蜡烛</button>
+      <button class="btn soft" onclick="location.href='/jijiu.html'" id="homeBtn">回到情绪急救室</button>
+      <div class="count" id="count"></div>
+    </div>
+  </div>
+
+  <div class="why">
+    <div class="why-t" id="whyT" onclick="toggleWhy()">▸ 为什么点一支蜡烛，会真的有用？</div>
+    <div class="why-b" id="whyB"></div>
+  </div>
+</div>
+
+<script src="/i18n.js?v=4"></script>
+<script src="/analytics.js?v=1"></script>
+<script>
+function L(zh,en){ return window.LUMI_LANG==='en' ? en : zh; }
+var LS='lumiere_candle';
+
+var CANDLES = {
+  heart:{
+    color:'#f2a3b3', flameTop:34,
+    nm:['爱心烛','Heart'], mn:['为爱情许愿','For love'],
+    svg:'<path d="M50 90 C14 62 7 40 7 26 C7 12 22 6 34 16 L50 30 L66 16 C78 6 93 12 93 26 C93 40 86 62 50 90 Z" fill="#f2a3b3"/><path d="M50 82 C22 58 16 40 16 28 C16 20 24 16 32 22 L50 36 L68 22 C76 16 84 20 84 28 C84 40 78 58 50 82 Z" fill="#f7c0cb" opacity="0.6"/>',
+    wishes:[['愿我遇见对的人','May I meet the right person'],['愿我值得被好好爱','May I be truly loved'],['愿有情人终成眷属','May loving hearts unite'],['愿这段感情开花结果','May this love blossom']]
+  },
+  leaf:{
+    color:'#8fbf6a', flameTop:10,
+    nm:['柚子叶烛','Pomelo Leaf'], mn:['去晦气 · 赶小人','Clear bad luck'],
+    svg:'<path d="M50 6 C24 30 24 68 50 96 C76 68 76 30 50 6 Z" fill="#8fbf6a"/><path d="M50 6 C36 30 36 66 50 96 C40 66 40 30 50 6 Z" fill="#a6cf82" opacity="0.7"/><path d="M50 16 L50 90" stroke="#5f8c3f" stroke-width="2.4" fill="none"/>',
+    wishes:[['愿霉运离我远去','May bad luck leave me'],['愿小人退散','May ill-wishers stay away'],['愿我清清爽爽重新开始','May I start fresh and clear'],['愿坏的都过去，好的正来','May the bad pass, the good come']]
+  },
+  star:{
+    color:'#f4d06a', flameTop:10,
+    nm:['星星烛','Star'], mn:['给自己希望','Hope for you'],
+    svg:'<path d="M50 6 L61 37 L95 38 L68 58 L78 92 L50 72 L22 92 L32 58 L5 38 L39 37 Z" fill="#f4d06a"/><path d="M50 20 L57 40 L79 41 L61 54 L68 76 L50 63 L32 76 L39 54 L21 41 L43 40 Z" fill="#f8dd8c" opacity="0.7"/>',
+    wishes:[['愿我早点走出来','May I heal soon'],['愿我越来越好','May I keep getting better'],['愿我值得一切美好','May I deserve all good things'],['愿我心想事成','May my wishes come true']]
+  }
+};
+var curType='heart', selWish='';
+
+/* ── 花园背景 ── */
+function gardenBg(){
+  var g=document.getElementById('garden'); if(!g) return;
+  var petal=function(c){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="'+c+'"><g transform="translate(12,12)"><circle cx="0" cy="-5" r="3"/><circle cx="4.8" cy="-1.5" r="3"/><circle cx="3" cy="4" r="3"/><circle cx="-3" cy="4" r="3"/><circle cx="-4.8" cy="-1.5" r="3"/><circle cx="0" cy="0" r="2.2" fill="#fff"/></g></svg>';};
+  var leaf=function(c){return '<svg width="34" height="34" viewBox="0 0 24 24" fill="'+c+'"><path d="M12 22 C4 16 4 6 12 2 C20 6 20 16 12 22 Z"/></svg>';};
+  var butterfly=function(c){return '<svg width="26" height="26" viewBox="0 0 24 24" fill="'+c+'"><path d="M12 12 C8 4 2 6 4 12 C2 18 8 20 12 12 Z"/><path d="M12 12 C16 4 22 6 20 12 C22 18 16 20 12 12 Z"/></svg>';};
+  var greens=['#7fae57','#98c46f','#6d9e4a','#b4d38a'];
+  var flowers=['#f0a24e','#f4d06a','#ffffff','#e8a6c0','#c3a6e0','#ef9aa8'];
+  var html='';
+  // 底部花丛
+  for(var i=0;i<16;i++){ var c=greens[i%greens.length]; var l=Math.random()*100, b=-2+Math.random()*16, s=(0.8+Math.random()*1.4);
+    html+='<div style="left:'+l.toFixed(1)+'%;bottom:'+b.toFixed(1)+'%;transform:scale('+s.toFixed(2)+') rotate('+(Math.random()*40-20).toFixed(0)+'deg);opacity:0.9">'+leaf(c)+'</div>'; }
+  for(var j=0;j<12;j++){ var fc=flowers[j%flowers.length]; var l2=4+Math.random()*92, b2=4+Math.random()*22, s2=(0.8+Math.random()*1.2);
+    html+='<div style="left:'+l2.toFixed(1)+'%;bottom:'+b2.toFixed(1)+'%;transform:scale('+s2.toFixed(2)+')">'+petal(fc)+'</div>'; }
+  // 顶部零星花瓣 + 蝴蝶
+  for(var k=0;k<8;k++){ var fc2=flowers[k%flowers.length]; var t=6+Math.random()*46, l3=Math.random()*96, s3=(0.6+Math.random()*0.8);
+    html+='<div style="left:'+l3.toFixed(1)+'%;top:'+t.toFixed(1)+'%;transform:scale('+s3.toFixed(2)+');opacity:'+(0.5+Math.random()*0.4).toFixed(2)+'">'+petal(fc2)+'</div>'; }
+  ['#f0a24e','#8ab4c8','#e8a6c0'].forEach(function(bc,idx){ var t=10+idx*14+Math.random()*10, l4=8+Math.random()*80;
+    html+='<div style="left:'+l4.toFixed(1)+'%;top:'+t.toFixed(1)+'%;opacity:0.75">'+butterfly(bc)+'</div>'; });
+  g.innerHTML=html;
+}
+
+function renderStatic(){
+  document.getElementById('backLink').textContent=L('← 情绪急救室','← First-Aid');
+  document.getElementById('hTitle').textContent=L('许愿转念','Wish & Turn');
+  document.getElementById('hSub').textContent=L('在这片花园里，为自己点一支蜡烛，把念头，轻轻转向希望。','Light a candle for yourself, and gently turn your thoughts toward hope.');
+  document.getElementById('pickLabel').textContent=L('选一支属于你的蜡烛——','Choose a candle that’s yours —');
+  document.getElementById('wishLabel').textContent=L('许一个愿——','Make a wish —');
+  document.getElementById('wishText').placeholder=L('也可以写下自己的话……','Or write your own…');
+  document.getElementById('wishBtn').textContent=L('许下心愿 ✦','Make this wish ✦');
+  document.getElementById('rechooseBtn').textContent=L('换一支蜡烛','Choose another candle');
+  document.getElementById('rechooseBtn2').textContent=L('换一支蜡烛','Choose another candle');
+  document.getElementById('newBtn').textContent=L('换一个心愿','Make a new wish');
+  document.getElementById('reframeBtn').textContent=L('还有念头在扎你？转念一下 →','A thought still stinging? Reframe it →');
+  document.getElementById('homeBtn').textContent=L('回到情绪急救室','Back to First-Aid');
+  document.getElementById('litMsg').innerHTML=L('你的蜡烛，正在为你亮着。<br>愿它陪你，一天天，慢慢变好。','Your candle is burning, for you.<br>May it keep you company as you slowly heal.');
+  document.getElementById('whyT').textContent=L('▸ 为什么点一支蜡烛，会真的有用？','▸ Why lighting a candle actually helps');
+  renderPicker(); renderWhy();
+}
+function candleSvg(type){
+  return '<svg width="130" height="130" viewBox="0 0 100 100">'+CANDLES[type].svg+'</svg>';
+}
+function renderPicker(){
+  var en=window.LUMI_LANG==='en';
+  document.getElementById('pickGrid').innerHTML=Object.keys(CANDLES).map(function(t){
+    var c=CANDLES[t];
+    return '<div class="pick" onclick="choose(\''+t+'\')">'
+      +'<svg width="56" height="56" viewBox="0 0 100 100">'+c.svg+'</svg>'
+      +'<div class="nm">'+(en?c.nm[1]:c.nm[0])+'</div><div class="mn">'+(en?c.mn[1]:c.mn[0])+'</div></div>';
+  }).join('');
+}
+function renderWishChips(){
+  var en=window.LUMI_LANG==='en';
+  document.getElementById('wishChips').innerHTML=CANDLES[curType].wishes.map(function(w){
+    return '<span class="chip'+(selWish===w[0]?' on':'')+'" onclick="pickWish(\''+w[0].replace(/'/g,"\\'")+'\',this)">'+(en?w[1]:w[0])+'</span>';
+  }).join('');
+}
+function pickWish(zh,el){ selWish=zh; document.querySelectorAll('#wishChips .chip').forEach(function(c){c.classList.remove('on');}); el.classList.add('on'); }
+function renderWhy(){
+  var en=window.LUMI_LANG==='en';
+  document.getElementById('whyB').innerHTML=en
+    ? '<b>Hope is a skill.</b> Hope (Snyder’s hope theory) is one of the strongest protectors against depression — a small ritual focused on a wish keeps it alive.<br><br><b>Meaning heals.</b> “Benefit-finding” — drawing meaning from pain — predicts recovery after loss.'
+    : '<b>希望是一种能力。</b>希望感（Snyder 希望理论）是抵御抑郁最强的保护因素之一——一个聚焦心愿的小仪式，能把它重新点亮。<br><br><b>找到意义，就是疗愈。</b>"benefit-finding"（从痛苦里提炼意义）被证明能预测失落后的复原。';
+}
+function toggleWhy(){ document.getElementById('whyB').classList.toggle('show'); }
+
+function placeFlame(type){
+  var f=document.getElementById('flame'); f.style.top=CANDLES[type].flameTop+'px';
+}
+function choose(type){
+  curType=type; selWish='';
+  document.getElementById('candleBody').innerHTML=candleSvg(type);
+  placeFlame(type);
+  document.getElementById('picker').style.display='none';
+  document.getElementById('stage').classList.add('show');
+  document.getElementById('litTxt').classList.remove('show');
+  document.getElementById('wishbox').classList.add('show');
+  renderWishChips();
+  document.getElementById('stage').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function makeWish(){
+  var custom=document.getElementById('wishText').value.trim();
+  var wish=custom||selWish;
+  if(!wish){ document.getElementById('wishText').focus(); return; }
+  var data={type:curType, wish:wish, at:new Date().toISOString()};
+  try{ localStorage.setItem(LS,JSON.stringify(data)); var n=parseInt(localStorage.getItem('lumiere_candle_count')||'0',10)+1; localStorage.setItem('lumiere_candle_count',String(n)); }catch(e){}
+  showLit(data);
+}
+function showLit(data){
+  curType=data.type||'star';
+  document.getElementById('candleBody').innerHTML=candleSvg(curType);
+  placeFlame(curType);
+  document.getElementById('picker').style.display='none';
+  document.getElementById('stage').classList.add('show');
+  document.getElementById('wishbox').classList.remove('show');
+  document.getElementById('litWish').textContent='「'+data.wish+'」';
+  document.getElementById('litSince').textContent=sinceText(data.at);
+  var n=parseInt(localStorage.getItem('lumiere_candle_count')||'0',10);
+  document.getElementById('count').textContent=n>0?L('你已为自己点亮 '+n+' 支','You’ve lit '+n+' candle'+(n>1?'s':'')):'';
+  document.getElementById('litTxt').classList.add('show');
+}
+function sinceText(iso){
+  var ms=Date.now()-new Date(iso).getTime(), h=Math.floor(ms/3600000), d=Math.floor(h/24), en=window.LUMI_LANG==='en';
+  if(d>=1) return en?('Burning for you for '+d+' day'+(d>1?'s':'')):('已经为你亮了 '+d+' 天');
+  if(h>=1) return en?('Burning for you for '+h+' hour'+(h>1?'s':'')):('已经为你亮了 '+h+' 小时');
+  return en?'Just lit, for you ✦':'刚刚为你点亮 ✦';
+}
+function newWish(){ document.getElementById('litTxt').classList.remove('show'); selWish=''; document.getElementById('wishText').value=''; renderWishChips(); document.getElementById('wishbox').classList.add('show'); }
+function backToPick(){
+  document.getElementById('stage').classList.remove('show');
+  document.getElementById('litTxt').classList.remove('show');
+  document.getElementById('picker').style.display='block';
+  document.getElementById('picker').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function restore(){
+  var raw=null; try{ raw=localStorage.getItem(LS); }catch(e){}
+  if(raw){ try{ var d=JSON.parse(raw); if(d&&d.wish){ showLit(d); } }catch(e){} }
+}
+
+/* ══════════ 转念（点选式）══════════ */
+var THOUGHTS=[
+  { q:['他不理我，是不是不在乎我了','He’s ignoring me — does he not care?'],
+    d:['读心术','Mind-reading'],
+    dl:['你在替他的沉默编剧本。沉默有很多种可能，"不在乎"只是其中一种，而且往往不是真的。','You’re scripting his silence. Silence can mean many things; “doesn’t care” is just one — and often not the true one.'],
+    r:[['他没回消息 ≠ 他不在乎，也许只是此刻他有自己的事','No reply ≠ no care — maybe he just has his own things right now'],
+       ['我的价值，不由一条消息来决定','My worth isn’t decided by one message'],
+       ['我值得一段不用猜的关系','I deserve a relationship I don’t have to guess at']] },
+  { q:['是不是我做错了什么','Did I do something wrong?'],
+    d:['自我归罪','Self-blame'],
+    dl:['一段关系的结束，从来不是一个人的错。你在把两个人的事，全扛到自己身上。','The end of a relationship is never one person’s fault. You’re carrying what belongs to two.'],
+    r:[['关系是两个人的事，我不必独自背下全部','It takes two — I don’t have to carry it all alone'],
+       ['我已经尽力了，这就够了','I did my best, and that is enough'],
+       ['犯错，不代表不值得被爱','Making mistakes doesn’t make me unworthy of love']] },
+  { q:['我是不是不值得被爱','Am I just unworthy of love?'],
+    d:['以偏概全','Overgeneralizing'],
+    dl:['一个人的离开，证明不了你的价值。那是"你们不合适"，不是"你不够好"。','One person leaving proves nothing about your worth. It means “not a fit,” not “not enough.”'],
+    r:[['他的离开说明我们不合适，不说明我不好','His leaving means we didn’t fit — not that I’m not good'],
+       ['我的价值一直都在，不因谁而增减','My worth has always been here, unchanged by anyone'],
+       ['会有人，刚好爱我本来的样子','Someone will love me exactly as I am']] },
+  { q:['他一定过得比我好','He must be doing better than me'],
+    d:['脑补 + 比较','Assuming & comparing'],
+    dl:['你在和一个幻象比较。你看不到他的深夜，就像别人看不到你的坚强。','You’re comparing yourself to an illusion — you don’t see his 2 a.m., just as others don’t see your strength.'],
+    r:[['我看到的只是表面，不是他的全部','What I see is the surface, not the whole of him'],
+       ['他过得怎样，不影响我好好过自己的','How he’s doing doesn’t change how well I live mine'],
+       ['我把注意力，收回到自己身上','I bring my attention back to myself']] },
+  { q:['我再也遇不到这样的人了','I’ll never meet someone like this again'],
+    d:['算命错误','Fortune-telling'],
+    dl:['你没法预测未来，只是此刻太痛，才觉得"永远"。痛会过去，路还很长。','You can’t predict the future — “never” is just how much it hurts now. Pain passes; the road is long.'],
+    r:[['此刻的痛，不等于结局','Today’s pain is not the ending'],
+       ['遇见过一次美好，说明我有能力再遇见','I met something good once — I can again'],
+       ['最好的，也许还没出现','The best may not have arrived yet']] }
+];
+var CONTROLS=[
+  ['早点睡，明天再说','Sleep early — tomorrow is another day'],
+  ['今晚，对自己好一点','Be a little kind to myself tonight'],
+  ['先不回消息','Not reply, for now'],
+  ['去做件转移注意力的小事','Do a small thing to shift my focus'],
+  ['给自己泡一杯热的','Make myself something warm']
+];
+var rfIdx=0;
+function openReframe(){
+  var ov=document.getElementById('rfOv');
+  if(!ov){ ov=document.createElement('div'); ov.id='rfOv'; ov.className='rf-ov'; document.body.appendChild(ov); }
+  var en=window.LUMI_LANG==='en';
+  ov.innerHTML='<button class="rf-x" onclick="closeReframe()">×</button><div class="rf-box">'
+    +'<div class="rf-step show" id="rf1"><div class="rf-tag">'+L('转念','Reframe')+'</div>'
+      +'<div class="rf-title">'+L('哪句话，还在扎你？','Which thought still stings?')+'</div>'
+      +'<div class="rf-line">'+L('点一句最像你此刻的——','Tap the one closest to how you feel —')+'</div>'
+      + THOUGHTS.map(function(t,i){return '<div class="rf-chip" onclick="rfPick('+i+')">'+(en?t.q[1]:t.q[0])+'</div>';}).join('')
+    +'</div><div class="rf-step" id="rf2"></div><div class="rf-step" id="rf3"></div><div class="rf-step" id="rf4"></div></div>';
+  ov.classList.add('show');
+}
+function rfShow(id){ ['rf1','rf2','rf3','rf4'].forEach(function(x){var e=document.getElementById(x); if(e) e.classList.toggle('show', x===id);}); var ov=document.getElementById('rfOv'); if(ov) ov.scrollTop=0; }
+function rfPick(i){
+  rfIdx=i; var t=THOUGHTS[i], en=window.LUMI_LANG==='en';
+  document.getElementById('rf2').innerHTML='<div class="rf-tag">'+L('这可能是','This might be')+'</div>'
+    +'<div class="rf-title">「'+(en?t.d[1]:t.d[0])+'」</div>'
+    +'<div class="rf-line">'+(en?t.dl[1]:t.dl[0])+'</div>'
+    +'<button class="btn" onclick="rfReframes()">'+L('换个想法 →','Reframe it →')+'</button>';
+  rfShow('rf2');
+}
+function rfReframes(){
+  var t=THOUGHTS[rfIdx], en=window.LUMI_LANG==='en';
+  document.getElementById('rf3').innerHTML='<div class="rf-tag">'+L('换个说法','A kinder truth')+'</div>'
+    +'<div class="rf-title">'+L('哪一句，让你松一口气？','Which one lets you breathe?')+'</div>'
+    + t.r.map(function(r){return '<div class="rf-chip" onclick="rfControl()">'+(en?r[1]:r[0])+'</div>';}).join('');
+  rfShow('rf3');
+}
+function rfControl(){
+  var en=window.LUMI_LANG==='en';
+  document.getElementById('rf4').innerHTML='<div class="rf-tag">'+L('回到你能掌控的','Back to what you control')+'</div>'
+    +'<div class="rf-title">'+L('他怎么做，不归你管。<br>你现在能为自己做的是——','His choices aren’t yours to control.<br>What you can do for yourself now —')+'</div>'
+    + CONTROLS.map(function(c){return '<div class="rf-chip" onclick="rfDone(this)">'+(en?c[1]:c[0])+'</div>';}).join('')
+    +'<div class="rf-line" id="rfEnd" style="margin-top:14px"></div>';
+  rfShow('rf4');
+}
+function rfDone(el){
+  document.querySelectorAll('#rf4 .rf-chip').forEach(function(c){c.style.opacity='0.45';}); el.style.opacity='1'; el.style.borderColor='#a9c07a';
+  document.getElementById('rfEnd').innerHTML=L('念头换了，心就松了一点。<br>把这个更温柔的想法，也放进你的烛光里。','The thought shifted — and the weight with it.<br>Carry this kinder thought into your candlelight.')
+    +'<button class="btn" style="margin-top:16px" onclick="closeReframe()">'+L('好了 ✦','Done ✦')+'</button>';
+}
+function closeReframe(){ var ov=document.getElementById('rfOv'); if(ov) ov.classList.remove('show'); }
+
+gardenBg();
+renderStatic();
+restore();
+window.addEventListener('lumi-lang',function(){ renderStatic(); if(document.getElementById('litTxt').classList.contains('show')){ var raw=localStorage.getItem(LS); if(raw){try{showLit(JSON.parse(raw));}catch(e){}} } });
+</script>
+</body>
+</html>

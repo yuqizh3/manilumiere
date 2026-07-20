@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情绪急救室 · LUMIÈRE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+SC:wght@300;400&family=LXGW+WenKai+TC:wght@300;400&display=swap');
+:root{--cream:#faf6f0;--dark:#1a1510;--gold:#c9a96e;--gold-light:#e2c99a;--red:#8b4a5a;--pink:#e8b4c0;--blue:#8ab4c8;--text:#2c2218;--muted:#8a7560;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--text);font-family:'LXGW WenKai TC','Noto Serif SC',serif;min-height:100vh;padding:0 0 70px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 20px;max-width:720px;margin:0 auto;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:0.22em;color:var(--gold);cursor:pointer;}
+.back{font-size:13px;color:var(--muted);text-decoration:none;letter-spacing:0.05em;}
+.back:hover{color:var(--gold);}
+
+.hero{text-align:center;padding:14px 0 30px;}
+.hero h1{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:clamp(32px,5vw,46px);font-weight:300;letter-spacing:0.06em;color:var(--dark);}
+.hero .sub{color:var(--muted);font-size:14px;margin-top:10px;font-weight:300;letter-spacing:0.03em;line-height:1.8;}
+
+.card{position:relative;display:block;text-decoration:none;color:inherit;background:rgba(255,253,250,0.9);border:1px solid rgba(201,169,110,0.3);border-radius:18px;padding:30px 28px;margin-bottom:20px;transition:all .35s cubic-bezier(.2,.8,.2,1);overflow:hidden;cursor:pointer;}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(201,169,110,0.22);border-color:var(--gold);}
+.card::after{content:'';position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle at top right, rgba(226,201,154,0.28), transparent 70%);}
+.card-tag{font-size:11px;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:10px;}
+.card-title{font-family:'Cormorant Garamond','LXGW WenKai TC','Noto Serif SC',serif;font-size:30px;font-weight:300;color:var(--dark);letter-spacing:0.04em;margin-bottom:12px;}
+.card-desc{font-size:14px;line-height:1.85;color:var(--text);font-weight:300;max-width:92%;}
+.card-desc b{color:var(--gold);font-weight:400;}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:20px;}
+.card-mode{font-size:12px;color:var(--muted);letter-spacing:0.06em;font-style:italic;}
+.card-go{font-size:13px;color:var(--gold);letter-spacing:0.08em;}
+.flower{position:absolute;bottom:18px;right:22px;opacity:0.6;}
+.note{text-align:center;font-size:12.5px;color:var(--muted);font-weight:300;line-height:1.9;margin-top:14px;font-style:italic;letter-spacing:0.02em;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo" onclick="location.href='/xiuxi.html'">LUMIÈRE</div>
+  <a class="back" href="/xiuxi.html">← 光之修习</a>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>情绪急救室</h1>
+    <div class="sub">情绪上来的时候，别一个人扛。<br>推开一扇门——这里有人接住你。</div>
+  </div>
+
+  <a class="card" href="/burn.html">
+    <div class="card-tag">释放 · 放下</div>
+    <div class="card-title">焚烧炉</div>
+    <div class="card-desc">憋屈、放不下、想发又不该发的时候，把<b>那些话写下来</b>，一键焚烧、化作花瓣飘散。有心理学研究撑腰的一场温柔告别。</div>
+    <div class="card-foot">
+      <span class="card-mode">写下 · 焚烧 · 放下</span>
+      <span class="card-go">推开这扇门 →</span>
+    </div>
+    <svg class="flower" width="30" height="30" viewBox="0 0 24 24" fill="#c9784f" stroke="none"><path d="M12 2 C7 8 7 16 12 22 C17 16 17 8 12 2 Z"/></svg>
+  </a>
+
+  <a class="card" href="/candle.html">
+    <div class="card-tag">希望 · 守望</div>
+    <div class="card-title">许愿转念</div>
+    <div class="card-desc">点一支蜡烛，不为谁回来——<b>为自己留一盏灯</b>。许一个正向的愿，把念头轻轻转向希望，让它一直为你亮着，陪你一天天变好。</div>
+    <div class="card-foot">
+      <span class="card-mode">点亮 · 许愿 · 转念</span>
+      <span class="card-go">推开这扇门 →</span>
+    </div>
+    <svg class="flower" width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <path d="M12 3 C9.5 6 9.5 10 12 13 C14.5 10 14.5 6 12 3 Z" fill="#e2c99a"/>
+      <rect x="9.5" y="13" width="5" height="8" rx="1" fill="none" stroke="#d9a066" stroke-width="0.9"/>
+    </svg>
+  </a>
+
+  <div class="note">更多的门，正在路上——<br>转念、转移注意力，很快就来。</div>
+</div>
+<script src="/i18n.js?v=4"></script>
+<script src="/analytics.js?v=1"></script>
+</body>
+</html>
