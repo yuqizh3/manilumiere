@@ -23,6 +23,27 @@
     '个人中心': 'Account',
     '签到': 'Check in',
 
+    // ── 情绪急救室 / 光之修习门卡 ──
+    '← 光之修习': '← Cultivation',
+    '情绪急救室': 'Emotional First-Aid',
+    '情绪上来的时候，别一个人扛。': 'When emotions surge, don’t carry it alone.',
+    '推开一扇门——这里有人接住你。': 'Push open a door — you’ll be caught here.',
+    '此刻急救 · 随时': 'First Aid · Anytime',
+    '难受、憋屈、忍不住想联系他的时候，推开这扇门。里面有焚烧炉帮你放下、有许愿转念为你留一盏希望——难受时第一个想点开的地方。': 'When it hurts, when you’re holding it in, when you can’t resist texting him — open this door. Inside: the Furnace to help you let go, and Wish & Turn to keep a light of hope. The first place to open when it aches.',
+    '放下 · 希望 · 被接住': 'Let go · Hope · Be held',
+    '推门进入 →': 'Enter →',
+    '释放 · 放下': 'Release · Let go',
+    '焚烧炉': 'The Furnace',
+    '憋屈、放不下、想发又不该发的时候，把那些话写下来，一键焚烧、化作花瓣飘散。有心理学研究撑腰的一场温柔告别。': 'When you’re holding it in, can’t let go, or want to send what you shouldn’t — write those words down, burn them with a tap, and watch them drift away as petals. A gentle goodbye, backed by psychology.',
+    '写下 · 焚烧 · 放下': 'Write · Burn · Release',
+    '推开这扇门 →': 'Open this door →',
+    '希望 · 守望': 'Hope · Watch over',
+    '许愿转念': 'Wish & Turn',
+    '点一支蜡烛，不为谁回来——为自己留一盏灯。许一个正向的愿，把念头轻轻转向希望，让它一直为你亮着，陪你一天天变好。': 'Light a candle — not for someone to return, but to keep a light for yourself. Make a positive wish, gently turn your thoughts toward hope, and let it burn for you as you heal.',
+    '点亮 · 许愿 · 转念': 'Light · Wish · Reframe',
+    '更多的门，正在路上——': 'More doors are on the way —',
+    '转念、转移注意力，很快就来。': 'Reframe & distraction, coming soon.',
+
     // 首页 Hero
     '你的意念': 'Your Intention',
     '创造现实': 'Creates Reality',
