@@ -636,10 +636,13 @@ export default async function handler(req, res) {
             messages: [
               {
                 role: 'system',
-                content: `你是「爱情显影室」里温柔的镜子，理论根基是荣格（亲密关系是自我的投射、阴影）与依恋理论。用户刚记录了一次情绪。
-请只用 1-2 句中文，温柔地「照见」她此刻的感受，把镜头轻轻转回她自己。
-严格禁止：评判对方、评判用户、给出"该不该联系他/该怎么做"这类行动建议、说教、鸡汤口号。
-只是共情地映照，让她感到被看见。语气像一位懂她的老友，安静而深。` + langNote(body.lang)
+                content: `你是「爱情显影室」里的一面镜子——温柔，但一针见血。理论根基：荣格（投射/阴影）+ 依恋理论 + 情绪科学。用户刚记录了一次情绪。
+用 2-3 句中文回应她，做到：
+1) 先精准照见她此刻**真正**的感受或底层需要——不是复述她写的，而是点破她自己都没说出口的那一层（例如"你等的不是那条消息，是'我很重要'的确认"）。
+2) 可以温柔地点出一个她可能没意识到的模式或投射（如反刍、间歇性强化让人上瘾、把对方理想化、在他身上找自己缺的东西）。
+3) 最后把力量还给她自己。
+严格禁止：评判对方或她本人；给"该不该联系他/该怎么做"的行动建议；空泛鸡汤、说教、堆砌术语。
+不要开头寒暄，直接照见。语气像一个真正懂她、看得很透、又很温柔的人。` + langNote(body.lang)
               },
               {
                 role: 'user',
@@ -698,29 +701,45 @@ export default async function handler(req, res) {
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${AI_API_KEY}` },
           body: JSON.stringify({
             model: AI_MODEL,
-            max_tokens: 1600,
+            max_tokens: 2800,
             messages: [
               {
                 role: 'system',
-                content: `你是「爱情显影室」的分析师，理论根基是荣格（投射、阴影、阿尼姆斯/阿尼玛）与依恋理论（安全型/焦虑型/回避型）。
-用户记录了多次感情中的情绪。请把这些散落的记录，冲洗成一面清晰的镜子。用温暖、深刻、不评判的中文，输出以下结构（用 ## 分节）：
+                content: `你是一位受过专业训练的临床心理咨询师，擅长用「依恋理论」「认知行为(CBT)」「荣格分析心理学」「情绪科学」来解读情感困扰。用户在"爱情显影室"记录了多次感情中的情绪。请基于这些**真实记录**，为她写一份既温暖、又有专业深度的《显影报告》。
 
-## 你的高频情绪
-她这段时间最常出现的 2-3 种情绪，以及它们通常在什么时候浮现。
+【硬性要求】
+1. 必须结合具体的**心理学概念/专业名词**，并用一句话解释它——让她既"被看见"、又"学到东西"。从下面挑真正贴合她记录的 **2–4 个**（不要全用、不要堆砌）：
+   · 依恋类型（焦虑型 / 回避型 / 安全型 / 混乱型）
+   · 投射与阴影（荣格）：我们常把内在未整合的部分投射到对方身上
+   · 反刍思维（rumination）：反复咀嚼同一段痛苦，越想越困
+   · 间歇性强化（intermittent reinforcement）：忽冷忽热，反而让人更上瘾、更难放下
+   · 蔡格尼克效应（Zeigarnik effect）：没有结局的关系，大脑会一直挂着
+   · 沉没成本谬误：因为已经投入太多，而不舍得离开
+   · 情绪粒度（emotional granularity）：能精细分辨情绪的人，恢复得更好
+2. **每个概念都要落到她具体的记录上**（引用她写过的事件或情绪词），严禁泛泛而谈、空洞抒情。
+3. 温暖、不评判、不说教；**不要**给"要不要联系他 / 要不要复合"这类行动建议。
+4. 用 ## 分节；**每节 2–4 句、具体扎实**；全文控制在 700 字以内，务必写完整、不要中途截断。
 
-## 反复出现的主题
-她的记录里反复出现的人、场景或念头——这些重复，往往指向未被看见的需要。
+【结构】
+## 你的情绪画像
+她最常出现的 2–3 种情绪，以及它们通常在什么时候、被什么触发。
+
+## 藏在情绪下的模式
+结合 1–2 个上面的心理学概念，落到她的具体记录，点出重复出现的模式。
 
 ## 你的依恋倾向
-基于记录，温柔地指出她更接近安全型/焦虑型/回避型中的哪一种，给出依据，不贴死标签。
+判断她更接近哪一种依恋类型 + 依据（引用记录）+ 一句话解释"这意味着什么、不是你的错"。
 
-## 一面镜子（投射洞察）
-最重要的一段。用荣格的视角点出：她在对方身上追逐/害怕的，其实映照着她自己内在的什么。句式可用"你爱的是他身上的___，它照见的其实是你自己的___"。
+## 一面镜子（荣格投射）
+她在对方身上追逐/害怕的，其实映照着她自己内在的什么。可用句式"你在他身上寻找的___，其实是你一直没能给自己的___"。
 
-## 你的显影之路
-她的平静度从最初的 ${first}/10 到现在的 ${last}/10。请据此温柔地描述她的变化轨迹，让她看见自己正在走的路。不许说教，只陈述你看见的成长。
+## 你正在发生的变化
+她的平静度从最初的 ${first}/10 到现在的 ${last}/10。结合记录的变化，具体地让她看见自己的成长（哪怕数字没变，也能从"情绪的质地"看变化）。真诚、不敷衍。
 
-全程像一位懂她的、有智慧的老友。不给"要不要联系他"之类的行动建议。` + langNote(body.lang)
+## 一个温柔的练习
+给一个**具体、当下就能做**的小建议（基于 CBT 或自我关怀），帮助她继续往前走。
+
+全程像一位真正懂她、又有专业底气的咨询师。` + langNote(body.lang)
               },
               {
                 role: 'user',
@@ -800,6 +819,23 @@ export default async function handler(req, res) {
         recentUsers = (await ur.json()) || [];
       } catch (e) { recentUsers = []; }
 
+      // 历史趋势（注册 / 签到有时间戳，可回溯——近 30 天）
+      let checkinRows = [];
+      try {
+        const cr = await fetch(`${SUPABASE_URL}/rest/v1/check_ins?select=checked_at,created_at&order=created_at.desc&limit=5000`, { headers: H });
+        checkinRows = (await cr.json()) || [];
+      } catch (e) { checkinRows = []; }
+      function dailyTrend(dates, days) {
+        const out = [];
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+          out.push({ date: d, count: dates.filter(x => (x || '').slice(0, 10) === d).length });
+        }
+        return out;
+      }
+      const regTrend = dailyTrend(recentUsers.map(u => u.created_at), 30);
+      const checkinTrend = dailyTrend(checkinRows.map(c => c.checked_at || c.created_at), 30);
+
       return res.status(200).json({
         ok: true,
         totalPageViews: pv.length,
@@ -812,6 +848,8 @@ export default async function handler(req, res) {
         totalCheckins,
         totalManifest,
         trend,
+        regTrend,
+        checkinTrend,
         recentUsers,
         sampleSize: events.length
       });

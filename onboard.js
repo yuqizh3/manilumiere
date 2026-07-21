@@ -98,7 +98,7 @@
       '<div class="ob-tag">' + g.tag + '</div>' +
       '<h3 class="ob-title">' + g.title + '</h3>' +
       '<p class="ob-body">' + g.body + '</p>' +
-      '<div class="ob-tip"><b>▸ ' + HOW[l] + '：</b>' + g.tip + '</div>' +
+      '<div class="ob-tip"><b>▸ ' + HOW[l] + (l === 'en' ? ': ' : '：') + '</b>' + g.tip + '</div>' +
       '<button class="ob-btn" id="ob-got">' + GOT[l] + '</button>' +
       '<div class="ob-skip" id="ob-skip">' + SKIP[l] + '</div>';
     ov.appendChild(card);

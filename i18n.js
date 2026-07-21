@@ -44,6 +44,18 @@
     '更多的门，正在路上——': 'More doors are on the way —',
     '转念、转移注意力，很快就来。': 'Reframe & distraction, coming soon.',
 
+    // ── 提示弹窗（登录/体验用完 等）──
+    '✦ 今日免费体验已用完': '✦ Today’s free tries are used up',
+    '登录后继续': 'Sign in to continue',
+    '登录即可无限使用，每日签到得积分，': 'Sign in for unlimited access and daily check-in credits,',
+    '还能开启 30 天自我探索。': 'plus the 30-Day Self-Discovery.',
+    '登录 / 注册 →': 'Sign in / Register →',
+    '明天再来': 'Maybe tomorrow',
+    '加入光居': 'Join LUMIÈRE',
+    '先随便看看': 'Just looking around',
+    '保存你的显化记录，进入「光之修习」，30天自我探索、爱情显影室，一路照见自己。': 'Save your manifestations and enter Cultivation — 30-Day Self-Discovery and The Shadow Room, seeing yourself all the way.',
+    '积分不足，去签到或做「30天自我探索」赚积分吧 ✦': 'Not enough credits — check in daily or do the 30-Day Self-Discovery to earn more ✦',
+
     // 首页 Hero
     '你的意念': 'Your Intention',
     '创造现实': 'Creates Reality',

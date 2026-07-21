@@ -248,14 +248,28 @@ function emotionTone(e){
 }
 
 const MIRROR_QUESTIONS = [
-  '他哪一个举动最刺痛你？这份刺痛，让你想起过去的谁？',
-  '你此刻最怕失去的，是他，还是他让你感觉到的那个自己？',
-  '你希望他为你做的那件事，你能不能先自己为自己做到？',
-  '如果这份感觉会说话，它最想要的到底是什么？',
-  '此刻的你最需要听到哪一句话？那句话，本该由谁对你说？',
-  '你在他身上寻找的，是不是你从未从自己那里得到过的东西？',
-  '如果这件事发生在你最好的朋友身上，你会怎样安慰她？',
-  '这份情绪，你以前在什么时候也曾经历过？那时的你多大？'
+  ['他哪一个举动最刺痛你？这份刺痛，让你想起过去的谁？','Which of his actions stung most? Who from your past does that sting recall?'],
+  ['你此刻最怕失去的，是他，还是他让你感觉到的那个自己？','What do you fear losing most — him, or the self he let you feel?'],
+  ['你希望他为你做的那件事，你能不能先自己为自己做到？','The thing you wish he’d do for you — could you do it for yourself first?'],
+  ['如果这份感觉会说话，它最想要的到底是什么？','If this feeling could speak, what would it want most?'],
+  ['此刻你最需要听到哪一句话？那句话，本该由谁对你说？','What one sentence do you most need to hear? Who should have said it?'],
+  ['你在他身上寻找的，是不是你从未从自己那里得到过的？','Is what you seek in him something you never gave yourself?'],
+  ['如果这件事发生在你最好的朋友身上，你会怎样安慰她？','If this happened to your best friend, how would you comfort her?'],
+  ['这份情绪，你以前在什么时候也经历过？那时的你多大？','When have you felt this before? How old were you then?'],
+  ['你爱的是真实的他，还是你想象中、你希望他成为的那个人？','Do you love the real him — or the version you imagined and hoped he’d be?'],
+  ['如果明天他就消失，你最遗憾的，是失去他，还是失去"被爱着"的证明？','If he vanished tomorrow, would you grieve losing him — or losing proof you were loved?'],
+  ['你一直在等他改变。这份等待，让你付出了什么？','You keep waiting for him to change. What has that waiting cost you?'],
+  ['在这段关系里，你有多久没有问过自己"我快乐吗"？','In this relationship, how long since you asked yourself, “Am I happy?”'],
+  ['你害怕的是失去他，还是害怕一个人？','Are you afraid of losing him, or afraid of being alone?'],
+  ['如果不再需要他的认可，你会先为自己做哪件事？','If you no longer needed his approval, what would you do for yourself first?'],
+  ['他的忽冷忽热，为什么反而让你更放不下？','Why does his hot-and-cold make you hold on even tighter?'],
+  ['你在他身上，反复扮演着一个什么样的角色？这个角色，你熟悉吗？','What role do you keep playing with him? Does it feel familiar?'],
+  ['你说服自己"再等等"的时候，心里其实早就知道什么？','When you tell yourself “just wait a little longer,” what do you already know?'],
+  ['你把多少"如果当初"，用来惩罚现在的自己？','How many “what-ifs” are you using to punish your present self?'],
+  ['你想联系他的那一刻，真正想被满足的需要是什么？','In the moment you want to text him, what need are you really trying to meet?'],
+  ['你能不能像心疼别人一样，心疼此刻的自己？','Can you ache for yourself the way you’d ache for someone you love?'],
+  ['如果这段关系是一面镜子，它照出了你哪一部分？','If this relationship is a mirror, which part of you does it reflect?'],
+  ['三年后的你，会希望现在的你，怎么对待自己？','Three years from now, how would you want today’s you to treat yourself?']
 ];
 
 let selectedEmotion = '';
@@ -458,7 +472,11 @@ function sosFinish(){
 }
 function closeSos(){ stopBreath(); var ov=document.getElementById('sosOv'); if(ov) ov.classList.remove('show'); }
 // 语言切换时重渲染断联卡（其内容由 JS 按语言生成）
-window.addEventListener('lumi-lang', function(){ renderNcCard(); });
+window.addEventListener('lumi-lang', function(){
+  renderNcCard();
+  if(curQ){ document.getElementById('mirrorQ').textContent = (window.LUMI_LANG==='en') ? curQ[1] : curQ[0]; }
+  renderEmotionChips();
+});
 
 function renderEmotionChips(){
   const box = document.getElementById('emotionChips');
@@ -470,12 +488,14 @@ function pickEmotion(e, el){
   document.querySelectorAll('#emotionChips .chip').forEach(c=>c.classList.remove('on'));
   el.classList.add('on');
 }
+let curQ = null;
 function rerollQuestion(){
   let q;
   do { q = MIRROR_QUESTIONS[Math.floor(Math.random()*MIRROR_QUESTIONS.length)]; }
-  while (q === currentQuestion && MIRROR_QUESTIONS.length > 1);
-  currentQuestion = q;
-  document.getElementById('mirrorQ').textContent = q;
+  while (q === curQ && MIRROR_QUESTIONS.length > 1);
+  curQ = q;
+  currentQuestion = q[0];
+  document.getElementById('mirrorQ').textContent = (window.LUMI_LANG === 'en') ? q[1] : q[0];
 }
 
 function switchView(v){
@@ -677,8 +697,8 @@ function mdToHtml(md){
 
 init();
 </script>
-<script src="/i18n.js?v=5"></script>
-<script src="/onboard.js?v=1"></script>
+<script src="/i18n.js?v=6"></script>
+<script src="/onboard.js?v=2"></script>
 <script>window.Onboard && Onboard.show('xianying');</script>
 <script src="/analytics.js?v=1"></script>
 <script src="/music.js?v=1"></script>
